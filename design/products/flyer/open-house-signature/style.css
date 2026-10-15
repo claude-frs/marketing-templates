@@ -1,0 +1,446 @@
+/* ==========================================================================
+   Flyer / open-house-signature
+   8.5 x 11 in, 0.125 in bleed. Relentless palette only. Dark ground.
+
+   The idea: a luxury property advertisement, not a flyer. The house runs
+   full bleed across the top with the title set into its shadow, the other
+   rooms run down its edge as a contact sheet, and the agent, cut out with
+   no background, stands in a gold card with head and shoulders rising
+   above its top edge.
+
+   Units are pt. .osg-sheet is trim + bleed (630 x 810), .osg-trim is the
+   finished size (612 x 792) and everything is placed in trim coordinates.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Bold.otf") format("opentype");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@page {
+  size: 8.75in 11.25in;
+  margin: 0;
+}
+
+.osg {
+  /* Relentless palette */
+  --gold: #beaf87;
+  --gold-med: #ded7c3;
+  --gold-lt: #f8f7f2;
+  --white: #ffffff;
+  --grey: #252526;
+  --grey-rgb: 37, 37, 38;
+
+  --bleed: 9pt;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.osg {
+  background: #d9d9d9;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+@media print {
+  body.osg {
+    background: none;
+  }
+}
+
+/* :where() keeps the reset at single-class weight so element rules win. */
+.osg :where(p, h1, h2, ul) {
+  margin: 0;
+  padding: 0;
+}
+
+.osg ul {
+  list-style: none;
+}
+
+.osg img {
+  display: block;
+}
+
+.osg-sheet {
+  position: relative;
+  width: 630pt;
+  height: 810pt;
+  overflow: hidden;
+  background: var(--grey);
+  color: var(--gold-lt);
+  font-family: "Oakes Grotesk", sans-serif;
+}
+
+.osg-trim {
+  position: absolute;
+  inset: var(--bleed);
+}
+
+/* --------------------------------------------------------------------------
+   The hero: full bleed across the top, darkened at the top for the
+   wordmark and fading to the ground at the bottom for the title.
+   -------------------------------------------------------------------------- */
+
+.osg-hero {
+  position: absolute;
+  left: calc(-1 * var(--bleed));
+  right: calc(-1 * var(--bleed));
+  top: calc(-1 * var(--bleed));
+  height: calc(424pt + var(--bleed));
+}
+
+.osg-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--hero-x, 40%) center;
+}
+
+.osg-hero::before,
+.osg-hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.osg-hero::before {
+  top: 0;
+  height: 130pt;
+  background: linear-gradient(to bottom, rgba(var(--grey-rgb), 0.6), rgba(var(--grey-rgb), 0));
+}
+
+/* Full height, so neither layer has an edge: the bottom fades to the
+   ground, and the left side is shaded for the title. */
+.osg-hero::after {
+  top: 0;
+  bottom: 0;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(var(--grey-rgb), 0) 36%,
+      rgba(var(--grey-rgb), 0.7) 66%,
+      rgb(var(--grey-rgb)) 100%
+    ),
+    linear-gradient(
+      to right,
+      rgba(var(--grey-rgb), 0.5) 0%,
+      rgba(var(--grey-rgb), 0) 55%
+    );
+}
+
+.osg-logo {
+  position: absolute;
+  left: 30pt;
+  top: 30pt;
+  width: 139pt;
+  height: 43pt;
+}
+
+/* The rest of the gallery as a contact sheet down the hero's right edge.
+   The two-line title leaves room for these to be large. */
+.osg-sheet-strip {
+  position: absolute;
+  left: 404pt;
+  top: 92pt;
+  width: 178pt;
+  display: flex;
+  flex-direction: column;
+  gap: 8pt;
+}
+
+.osg-sheet-strip__item {
+  height: 106pt;
+  border: 1pt solid var(--gold-lt);
+}
+
+.osg-sheet-strip__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Title block, set into the hero's shadow. Anchored at the bottom so more
+   dates grow it upward over the photo. */
+.osg-billing {
+  position: absolute;
+  left: 30pt;
+  bottom: 384pt;
+  width: 360pt;
+}
+
+.osg-title {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 66pt;
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--white);
+  white-space: nowrap;
+}
+
+.osg-title span {
+  display: block;
+  color: var(--gold);
+}
+
+.osg-sessions {
+  margin-top: 10pt;
+  display: flex;
+  flex-direction: column;
+  gap: 3pt;
+}
+
+.osg-session {
+  display: flex;
+  align-items: center;
+  gap: 10pt;
+  font-weight: 700;
+  font-size: 9.5pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--white);
+  white-space: nowrap;
+}
+
+.osg-session::before {
+  content: "";
+  width: 28pt;
+  border-top: 1pt solid var(--gold);
+}
+
+.osg-session__time {
+  font-weight: 400;
+  color: var(--gold-med);
+}
+
+/* --------------------------------------------------------------------------
+   Listing: price and address left, story right
+   -------------------------------------------------------------------------- */
+
+.osg-place {
+  position: absolute;
+  left: 30pt;
+  top: 438pt;
+  width: 240pt;
+}
+
+.osg-place__label {
+  font-weight: 700;
+  font-size: 7pt;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold-med);
+}
+
+.osg-place__price {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 28pt;
+  line-height: 1.1;
+  color: var(--gold);
+}
+
+.osg-place__street {
+  margin-top: 8pt;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 13pt;
+  line-height: 1.2;
+  color: var(--white);
+  text-wrap: balance;
+}
+
+.osg-place__city {
+  font-size: 9pt;
+  color: var(--gold-med);
+}
+
+.osg-stats {
+  margin-top: 12pt;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2pt 0;
+  font-weight: 500;
+  font-size: 7.5pt;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-med);
+}
+
+.osg-stats li {
+  white-space: nowrap;
+}
+
+.osg-stats li + li::before {
+  content: "·";
+  margin: 0 6pt;
+  color: var(--gold);
+}
+
+.osg-stats b {
+  font-family: "Typold", sans-serif;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  margin-right: 3pt;
+}
+
+.osg-story {
+  position: absolute;
+  left: 300pt;
+  top: 438pt;
+  width: 282pt;
+}
+
+.osg-story__headline {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 12.5pt;
+  line-height: 1.2;
+  color: var(--gold);
+  text-wrap: balance;
+}
+
+.osg-story__body {
+  margin-top: 6pt;
+  font-size: 8.5pt;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+/* --------------------------------------------------------------------------
+   The agent card. Its height wraps the details, and it grows upward from a
+   fixed bottom edge. The cutout stands on that edge and rises out of the
+   top; the details sit to its right.
+   -------------------------------------------------------------------------- */
+
+.osg-card {
+  position: absolute;
+  left: 30pt;
+  bottom: 38pt;
+  width: 552pt;
+  padding: 16pt 20pt 16pt 196pt;
+  background: var(--gold);
+  color: var(--grey);
+}
+
+.osg-agent__cutout {
+  position: absolute;
+  left: 46pt;
+  bottom: 38pt;
+  width: 150pt;
+  height: 222pt;
+}
+
+.osg-agent__cutout img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+.osg-agent {
+  color: var(--grey);
+}
+
+.osg-agent__caption {
+  font-weight: 700;
+  font-size: 7pt;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.osg-agent__name {
+  margin-top: 4pt;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 22pt;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.osg-agent__credential {
+  margin-top: 2pt;
+  font-size: 9pt;
+}
+
+.osg-agent__contact {
+  margin-top: 10pt;
+  padding-top: 9pt;
+  border-top: 0.75pt solid var(--grey);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4pt 18pt;
+}
+
+.osg-agent__line {
+  display: flex;
+  align-items: center;
+  gap: 6pt;
+  font-size: 9.5pt;
+  white-space: nowrap;
+}
+
+.osg-agent__line img {
+  width: 12pt;
+  height: 12pt;
+}
+
+.osg-agent__cta {
+  margin-top: 10pt;
+  font-size: 8.5pt;
+}
+
+.osg-agent__cta b {
+  font-family: "Typold", sans-serif;
+  font-size: 10pt;
+}
+
+.osg-legal {
+  position: absolute;
+  left: 30pt;
+  top: 762pt;
+  width: 552pt;
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+  color: var(--gold-med);
+}
+
+.osg-legal img {
+  height: 11pt;
+  width: auto;
+}
+
+.osg-legal__text {
+  margin-left: 2pt;
+  font-size: 6pt;
+}

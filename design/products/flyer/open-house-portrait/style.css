@@ -1,0 +1,493 @@
+/* ==========================================================================
+   Flyer / open-house-portrait
+   8.5 x 11 in, 0.125 in bleed. Relentless palette only. Grey ground.
+
+   The idea: the property and the person, both presented with confidence.
+   Every shape is a circle. On a light grey page, a large mid-grey circle
+   with a gold ring sits behind the photograph's top right, and a small
+   gold circle marks its top-left corner. The title is a dark band under
+   the photo, its right end cut on the large circle's curve. At the foot of
+   the page the agent, cut out
+   with no background, stands in front of a matching grey disc with a gold
+   ring and a small gold circle, cut by the page edge like a portrait.
+
+   Units are pt. .opt-sheet is trim + bleed (630 x 810), .opt-trim is the
+   finished size (612 x 792) and everything is placed in trim coordinates.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Bold.otf") format("opentype");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@page {
+  size: 8.75in 11.25in;
+  margin: 0;
+}
+
+.opt {
+  /* Relentless palette */
+  --gold: #beaf87;
+  --gold-med: #ded7c3;
+  --grey-lt: #f4f4f6;
+  --grey-med: #c4c4c6;
+  --grey: #252526;
+
+  --bleed: 9pt;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.opt {
+  background: #d9d9d9;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+@media print {
+  body.opt {
+    background: none;
+  }
+}
+
+/* :where() keeps the reset at single-class weight so element rules win. */
+.opt :where(p, h1, h2, ul) {
+  margin: 0;
+  padding: 0;
+}
+
+.opt ul {
+  list-style: none;
+}
+
+.opt img {
+  display: block;
+}
+
+.opt-sheet {
+  position: relative;
+  width: 630pt;
+  height: 810pt;
+  overflow: hidden;
+  background: var(--grey-lt);
+  color: var(--grey);
+  font-family: "Oakes Grotesk", sans-serif;
+}
+
+.opt-trim {
+  position: absolute;
+  inset: var(--bleed);
+}
+
+/* --------------------------------------------------------------------------
+   Geometry: circles only, echoing the agent's disc. A large mid-grey circle
+   with a gold ring sits off the top right, behind the photo, the dates and
+   the stats; a small gold circle marks the photo's top-left corner. Drawn
+   first, so everything else sits on top.
+   -------------------------------------------------------------------------- */
+
+/* Centred on 522 / 196, radius 290: large enough that every stat sits
+   inside it with room to spare. */
+.opt-sun {
+  position: absolute;
+  left: 232pt;
+  top: -94pt;
+  width: 580pt;
+  height: 580pt;
+  border-radius: 50%;
+  background: var(--grey-med);
+}
+
+.opt-sun-ring {
+  position: absolute;
+  left: 222pt;
+  top: -104pt;
+  width: 600pt;
+  height: 600pt;
+  border-radius: 50%;
+  border: 1.25pt solid var(--gold);
+}
+
+.opt-corner-dot {
+  position: absolute;
+  left: 17pt;
+  top: 77pt;
+  width: 26pt;
+  height: 26pt;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+/* The small solid gold circle on the disc's edge. */
+.opt-dot {
+  position: absolute;
+  left: 196pt;
+  top: 586pt;
+  width: 34pt;
+  height: 34pt;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+/* --------------------------------------------------------------------------
+   Header: wordmark left, schedule right
+   -------------------------------------------------------------------------- */
+
+.opt-logo {
+  position: absolute;
+  left: 30pt;
+  top: 30pt;
+  width: 139pt;
+  height: 43pt;
+}
+
+.opt-sessions {
+  position: absolute;
+  right: 30pt;
+  top: 32pt;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3pt;
+}
+
+.opt-session {
+  display: flex;
+  align-items: center;
+  gap: 8pt;
+  font-weight: 700;
+  font-size: 8.5pt;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.opt-session__time {
+  font-weight: 400;
+}
+
+/* Three dates need a little more room before the photo. */
+.opt--sessions-3 .opt-sessions {
+  top: 26pt;
+  gap: 2pt;
+}
+
+/* --------------------------------------------------------------------------
+   The photograph, and the title band under it.
+
+   The band fills the strip between the photo's bottom edge, the left
+   margin and the large circle. Its right end is not drawn: a radial mask
+   cuts it on a circle concentric with the large one (radius 310, i.e. 20pt
+   outside the fill and 10pt outside the gold ring), so the band and the
+   circle fit together with an even gap. The mask's centre is the large
+   circle's centre in the band's own coordinates: (522 - 30, 196 - 352).
+   -------------------------------------------------------------------------- */
+
+.opt-hero {
+  position: absolute;
+  left: 30pt;
+  top: 90pt;
+  width: 552pt;
+  height: 262pt;
+}
+
+.opt-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--hero-x, 50%) center;
+}
+
+.opt-band {
+  position: absolute;
+  left: 30pt;
+  top: 352pt;
+  width: 300pt;
+  height: 62pt;
+  padding: 0 0 0 18pt;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--grey);
+  color: var(--grey-lt);
+  -webkit-mask: radial-gradient(circle 310pt at 492pt -156pt, transparent 310pt, #000 310.5pt);
+  mask: radial-gradient(circle 310pt at 492pt -156pt, transparent 310pt, #000 310.5pt);
+}
+
+.opt-title {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 24pt;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.opt-title span {
+  color: var(--gold);
+}
+
+.opt-price {
+  margin-top: 5pt;
+  display: flex;
+  align-items: baseline;
+  gap: 8pt;
+  white-space: nowrap;
+}
+
+.opt-price__label {
+  font-weight: 700;
+  font-size: 6.5pt;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-med);
+}
+
+.opt-price__value {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 15pt;
+  line-height: 1;
+}
+
+/* Stats under the photo, inside the large circle: two per row. */
+.opt-stats {
+  position: absolute;
+  left: 362pt;
+  top: 364pt;
+  width: 220pt;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8pt 12pt;
+}
+
+.opt-stat {
+  display: flex;
+  align-items: center;
+  gap: 7pt;
+  white-space: nowrap;
+}
+
+.opt-stat img {
+  width: 16pt;
+  height: 16pt;
+}
+
+.opt-stat__value {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 13pt;
+}
+
+.opt-stat__unit {
+  font-weight: 500;
+  font-size: 7pt;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   Gallery: four photos in a row
+   -------------------------------------------------------------------------- */
+
+.opt-gallery {
+  position: absolute;
+  left: 30pt;
+  top: 424pt;
+  width: 552pt;
+  height: 70pt;
+  display: flex;
+  gap: 8pt;
+}
+
+.opt-gallery__item {
+  flex: 1 1 0;
+}
+
+.opt-gallery__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --------------------------------------------------------------------------
+   The agent: a gold disc running off the page, a fine ring outside it, and
+   the cutout standing in front, cut by the bottom edge.
+   -------------------------------------------------------------------------- */
+
+.opt-disc {
+  position: absolute;
+  left: -54pt;
+  top: 556pt;
+  width: 282pt;
+  height: 282pt;
+  border-radius: 50%;
+  background: var(--grey-med);
+}
+
+.opt-ring {
+  position: absolute;
+  left: -68pt;
+  top: 542pt;
+  width: 310pt;
+  height: 310pt;
+  border-radius: 50%;
+  border: 1.25pt solid var(--gold);
+}
+
+.opt-agent__cutout {
+  position: absolute;
+  left: 30pt;
+  bottom: calc(-1 * var(--bleed));
+  width: 170pt;
+  height: 262pt;
+}
+
+.opt-agent__cutout img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+/* --------------------------------------------------------------------------
+   Right column: address, story, agent details, legal
+   -------------------------------------------------------------------------- */
+
+.opt-detail {
+  position: absolute;
+  left: 262pt;
+  top: 510pt;
+  width: 320pt;
+}
+
+.opt-detail__street {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 15pt;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.opt-detail__city {
+  font-size: 9.5pt;
+}
+
+.opt-detail__headline {
+  margin-top: 10pt;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 11.5pt;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.opt-detail__body {
+  margin-top: 4pt;
+  font-size: 8.25pt;
+  line-height: 1.42;
+  text-wrap: pretty;
+}
+
+.opt-agent {
+  margin-top: 12pt;
+  padding-top: 10pt;
+  border-top: 0.75pt solid var(--grey);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12pt;
+}
+
+.opt-agent__name {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 14pt;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.opt-agent__credential {
+  margin-top: 1pt;
+  font-size: 8pt;
+  white-space: nowrap;
+}
+
+.opt-agent__contact {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3pt;
+}
+
+.opt-agent__line {
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+  font-size: 8pt;
+  white-space: nowrap;
+}
+
+.opt-agent__line img {
+  width: 11pt;
+  height: 11pt;
+}
+
+.opt-cta {
+  margin-top: 8pt;
+  font-size: 8pt;
+}
+
+.opt-cta b {
+  font-family: "Typold", sans-serif;
+  font-size: 9.5pt;
+}
+
+.opt-legal {
+  position: absolute;
+  left: 262pt;
+  top: 756pt;
+  width: 320pt;
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+}
+
+.opt-legal img {
+  height: 12pt;
+  width: auto;
+}
+
+.opt-legal__text {
+  margin-left: 2pt;
+  font-size: 6pt;
+  line-height: 1.35;
+}

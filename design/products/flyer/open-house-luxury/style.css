@@ -1,0 +1,569 @@
+/* ==========================================================================
+   Flyer / open-house-luxury
+   8.5 x 11 in, 0.125 in bleed. Relentless palette only. See notes.md.
+
+   Units are pt. The Figma frame is 612 x 792, which is 8.5 x 11 in at 72 pt
+   per inch, so every Figma value carries over 1:1.
+
+   .ohl-sheet is the full page including bleed (630 x 810 pt).
+   .ohl-trim is the finished size (612 x 792 pt), inset by the bleed.
+   Everything is laid out in trim coordinates. Anything that has to reach the
+   edge of the finished piece runs out by --bleed.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@page {
+  size: 8.75in 11.25in;
+  margin: 0;
+}
+
+.ohl {
+  /* Relentless palette */
+  --relentless-gold: #beaf87;
+  --relentless-gold-med: #ded7c3;
+  --white: #ffffff;
+  --obsessed-grey: #252526;
+  /* Secondary palette, accents only */
+  --dark-gold: #a19276;
+  --dark-gold-med: #b9b2a3;
+  --dark-gold-lt: #f1efec;
+  --medium-grey: #808285;
+  --digital-black: #121212;
+
+  --bleed: 9pt;
+  --trim-w: 612pt;
+  --trim-h: 792pt;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.ohl {
+  background: #e6e6e6;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+@media print {
+  body.ohl {
+    background: none;
+  }
+}
+
+.ohl p,
+.ohl h1,
+.ohl h2 {
+  margin: 0;
+}
+
+.ohl img {
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   Page
+   -------------------------------------------------------------------------- */
+
+.ohl-sheet {
+  position: relative;
+  width: calc(var(--trim-w) + 2 * var(--bleed));
+  height: calc(var(--trim-h) + 2 * var(--bleed));
+  overflow: hidden;
+  background: var(--digital-black);
+  font-family: "Typold", sans-serif;
+  color: var(--white);
+}
+
+.ohl-trim {
+  position: absolute;
+  inset: var(--bleed);
+}
+
+/* --------------------------------------------------------------------------
+   Background: the listing photo, dimmed everywhere, then shown at full
+   strength through a "1". With the outlined "2" on the left, the page
+   reads 21. Both shapes come straight from the Figma layers.
+   -------------------------------------------------------------------------- */
+
+.ohl-hero {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Set per listing with --hero-x so the house lands in the "1". */
+  object-position: var(--hero-x, 35%) center;
+}
+
+.ohl-hero--dim {
+  opacity: 0.2;
+}
+
+/* The "1": flag 251 to 612 wide and 234 deep, stem from 378 to the bottom.
+   Sheet coordinates, so trim values + 9pt, with the outer edges in bleed. */
+.ohl-hero--one {
+  clip-path: polygon(
+    260pt 0,
+    100% 0,
+    100% 100%,
+    387.2pt 100%,
+    387.2pt 243pt,
+    260pt 243pt
+  );
+}
+
+.ohl-numeral {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 421.183pt;
+  height: 641.982pt;
+}
+
+/* --------------------------------------------------------------------------
+   Upper area: header row and content row
+   -------------------------------------------------------------------------- */
+
+.ohl-info {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 612pt;
+  height: 698pt;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top-aligned rather than centred, so the wordmark stays put when the
+   schedule runs to more than one date and the pill grows downwards. The
+   4.6pt puts a one-date pill where Figma centres it against the logo. */
+.ohl-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20pt 0;
+  flex-shrink: 0;
+}
+
+/* White pill, square on the left and running into the bleed. */
+.ohl-title {
+  display: flex;
+  flex-direction: column;
+  gap: 10pt;
+  margin-top: 4.6pt;
+  margin-left: calc(-1 * var(--bleed));
+  padding: 10pt 30pt 10pt calc(30pt + var(--bleed));
+  background: var(--white);
+  border-radius: 0 50pt 50pt 0;
+  white-space: nowrap;
+}
+
+.ohl-title__type {
+  font-weight: 700;
+  font-size: 40pt;
+  line-height: normal;
+  color: var(--relentless-gold);
+  text-box: trim-both cap alphabetic;
+}
+
+.ohl-title__lead {
+  color: var(--obsessed-grey);
+}
+
+.ohl-sessions {
+  display: flex;
+  flex-direction: column;
+  gap: 8pt;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ohl-session {
+  font-weight: 400;
+  font-size: 14pt;
+  line-height: normal;
+  color: var(--obsessed-grey);
+  text-box: trim-both cap alphabetic;
+}
+
+.ohl-logo {
+  flex-shrink: 0;
+  width: 179pt;
+  height: 77pt;
+  padding: 20pt;
+}
+
+.ohl-logo img {
+  width: 139pt;
+  height: 43pt;
+}
+
+.ohl-content {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  gap: 10pt;
+  align-items: flex-start;
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Property column
+   -------------------------------------------------------------------------- */
+
+/* The bottom padding keeps at least 20pt between the gallery and the
+   footer. With one date there is room to spare and the gallery stays at
+   250; with three it gives up some height instead. */
+.ohl-property {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10pt;
+  padding-bottom: 20pt;
+}
+
+.ohl-address {
+  padding: 0 20pt;
+  font-weight: 700;
+  font-size: 14pt;
+  line-height: normal;
+  color: var(--white);
+}
+
+.ohl-price {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 10pt;
+  margin-left: calc(-1 * var(--bleed));
+  padding: 10pt 20pt 10pt calc(20pt + var(--bleed));
+  background: var(--white);
+  border-radius: 0 50pt 50pt 0;
+  font-family: "Oakes Grotesk", sans-serif;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ohl-price__label {
+  font-size: 20pt;
+  line-height: 18pt;
+  color: var(--digital-black);
+  text-box: trim-both cap alphabetic;
+}
+
+.ohl-price__value {
+  font-size: 24pt;
+  line-height: normal;
+  color: var(--relentless-gold);
+  text-box: trim-both cap alphabetic;
+}
+
+.ohl-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 10pt;
+  width: calc(100% - 100pt + var(--bleed));
+  margin-left: calc(-1 * var(--bleed));
+  padding: 10pt 20pt 10pt calc(20pt + var(--bleed));
+  background: rgba(18, 18, 18, 0.75);
+  border-radius: 0 8pt 8pt 0;
+  line-height: normal;
+}
+
+.ohl-overview__headline {
+  font-weight: 700;
+  font-size: 14pt;
+  color: var(--dark-gold-med);
+}
+
+.ohl-overview__body {
+  font-weight: 400;
+  font-size: 10pt;
+  color: var(--dark-gold-lt);
+}
+
+/* 2 x 2, 360 x 250 inside 20pt side padding. Gives a little height back
+   when the schedule runs to two or three dates. */
+.ohl-gallery {
+  flex: 0 1 250pt;
+  min-height: 190pt;
+  width: 400pt;
+  padding: 0 20pt;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10pt;
+}
+
+.ohl-gallery__item {
+  position: relative;
+  border: 1pt solid var(--relentless-gold);
+  border-radius: 8pt;
+  overflow: hidden;
+}
+
+.ohl-gallery__item img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --------------------------------------------------------------------------
+   Stats column
+   -------------------------------------------------------------------------- */
+
+/* Sized by its widest child, the legal block (123 + 40 padding), as in
+   Figma. That width is what sets the wrap of the description. */
+.ohl-stats {
+  flex-shrink: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 30pt;
+  padding: 0 20pt;
+  margin: 0;
+  list-style: none;
+}
+
+.ohl-stat {
+  position: relative;
+  flex-shrink: 0;
+  width: 100pt;
+  height: 100pt;
+}
+
+/* The offset outline behind each tile. Alternates left and right. */
+.ohl-stat::before {
+  content: "";
+  position: absolute;
+  top: 9pt;
+  left: -9pt;
+  width: 100pt;
+  height: 100pt;
+  border: 3pt solid var(--relentless-gold);
+  border-radius: 5pt;
+  opacity: 0.5;
+}
+
+.ohl-stat:nth-child(even)::before {
+  left: 9pt;
+}
+
+.ohl-stat__tile {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5pt;
+  padding: 10pt;
+  background: var(--obsessed-grey);
+  border-radius: 5pt;
+  overflow: hidden;
+}
+
+.ohl-stat__icon {
+  width: 32pt;
+  height: 32pt;
+}
+
+.ohl-stat__label {
+  font-weight: 500;
+  font-size: 14pt;
+  line-height: normal;
+  color: var(--white);
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Two or three open house dates push the content down. Tighten the stat
+   spacing so the legal block never gets cut off. */
+.ohl--sessions-2 .ohl-stats {
+  gap: 22pt;
+}
+
+.ohl--sessions-3 .ohl-stats {
+  gap: 14pt;
+}
+
+.ohl-legal {
+  display: flex;
+  gap: 5pt;
+  align-items: flex-start;
+  flex-shrink: 0;
+  width: 123pt;
+  margin-right: 0;
+}
+
+.ohl-legal__marks {
+  width: 18pt;
+  flex-shrink: 0;
+}
+
+.ohl-legal__marks img {
+  width: 18pt;
+  height: auto;
+}
+
+.ohl-legal__text {
+  width: 100pt;
+  font-weight: 400;
+  font-size: 6pt;
+  line-height: normal;
+  color: var(--white);
+}
+
+/* --------------------------------------------------------------------------
+   Footer: agent
+   -------------------------------------------------------------------------- */
+
+.ohl-footer {
+  position: absolute;
+  left: calc(-1 * var(--bleed));
+  right: calc(-1 * var(--bleed));
+  top: 698pt;
+  bottom: calc(-1 * var(--bleed));
+  /* 94pt band to the trim, content centred in it. The bottom padding is the
+     bleed, so centring ignores the part that gets cut off. */
+  padding: 0 calc(20pt + var(--bleed)) var(--bleed);
+  background: var(--digital-black);
+  display: flex;
+  align-items: center;
+  gap: 20pt;
+}
+
+.ohl-agent__photo {
+  position: relative;
+  flex-shrink: 0;
+  width: 70pt;
+  height: 70pt;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--medium-grey);
+}
+
+/* Figma frames the headshot at 108 x 162, offset -19 / -29. That gives the
+   head-and-shoulders crop for a standard 2:3 portrait. */
+.ohl-agent__photo img {
+  position: absolute;
+  left: -19pt;
+  top: -29pt;
+  width: 108pt;
+  height: 162pt;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.ohl-agent__info {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 70pt;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10pt;
+}
+
+.ohl-agent__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.ohl-agent__name {
+  font-weight: 700;
+  font-size: 16pt;
+  color: var(--relentless-gold);
+}
+
+.ohl-agent__credential {
+  font-weight: 400;
+  font-size: 12pt;
+  color: var(--relentless-gold);
+}
+
+.ohl-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.ohl-cta__heading {
+  font-weight: 700;
+  font-size: 15pt;
+  color: var(--relentless-gold-med);
+}
+
+.ohl-cta__sub {
+  font-weight: 400;
+  font-size: 10pt;
+  color: var(--white);
+}
+
+.ohl-contact {
+  display: flex;
+  gap: 10pt;
+  align-items: center;
+}
+
+.ohl-contact__pill {
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+  padding: 3pt 8pt;
+  border-radius: 50pt;
+  background: linear-gradient(to right, var(--dark-gold), var(--relentless-gold));
+  font-weight: 400;
+  font-size: 10pt;
+  line-height: normal;
+  color: var(--digital-black);
+  white-space: nowrap;
+}
+
+.ohl-contact__pill img {
+  width: 20pt;
+  height: 20pt;
+}

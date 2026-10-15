@@ -1,0 +1,104 @@
+{#
+  Flyer / open-house-signature
+  Same data shape as the other open house templates, plus
+  agentInfo.headshotCutoutUrl: the agent's headshot with the background
+  removed (transparent PNG or WebP), cut off straight at the bottom.
+  Reads session.date and session.time only.
+
+  Photos: the hero runs full bleed across the top. Gallery photos 2, 3 and
+  4 run down the hero's right edge; gallery photo 1 (usually the exterior
+  again) is not used, since the hero already shows it.
+
+  Optional fields are guarded with {% if %}; never | default().
+#}
+{%- set l = flyer.listing -%}
+{%- set a = flyer.agentInfo -%}
+{%- set sessions = flyer.openHouse.sessions -%}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Open House · {{ l.street }}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="osg osg--sessions-{{ sessions | length }}">
+  <div class="osg-sheet">
+    <div class="osg-trim">
+
+      <div class="osg-hero">
+        <img src="{{ l.heroImageUrl }}" alt=""{% if l.heroPositionX %} style="--hero-x: {{ l.heroPositionX }}%"{% endif %}>
+      </div>
+
+      <img class="osg-logo" src="assets/logo-c21-masters-luxury-white.svg" alt="CENTURY 21 Masters Luxury">
+
+      <div class="osg-sheet-strip">
+        {%- for src in l.galleryImageUrls %}{% if loop.index > 1 %}
+        <div class="osg-sheet-strip__item"><img src="{{ src }}" alt=""></div>
+        {%- endif %}{% endfor %}
+      </div>
+
+      <div class="osg-billing">
+        <h1 class="osg-title">Open <span>House</span></h1>
+        <ul class="osg-sessions">
+          {%- for s in sessions %}
+          <li class="osg-session"><span>{{ s.date }} <span class="osg-session__time">· {{ s.time }}</span></span></li>
+          {%- endfor %}
+        </ul>
+        <ul class="osg-stats">
+          {%- if l.beds %}<li><b>{{ l.beds }}</b>{% if l.beds == "1" %}Bed{% else %}Beds{% endif %}</li>{% endif %}
+          {%- if l.baths %}<li><b>{{ l.baths }}</b>{% if l.baths == "1" %}Bath{% else %}Baths{% endif %}</li>{% endif %}
+          {%- if l.sqft %}<li><b>{{ l.sqft }}</b>Sq Ft</li>{% endif %}
+          {%- if l.garageSpaces %}<li><b>{{ l.garageSpaces }}-Car</b>Garage</li>{% endif %}
+        </ul>
+      </div>
+
+      <div class="osg-place">
+        {%- if l.price %}
+        <p class="osg-place__label">{% if l.priceLabel %}{{ l.priceLabel }}{% else %}Offered at{% endif %}</p>
+        <p class="osg-place__price">{{ l.price }}</p>
+        {%- endif %}
+        <p class="osg-place__street">{{ l.street }}</p>
+        <p class="osg-place__city">{{ l.city }}, {{ l.state }} {{ l.zip }}</p>
+      </div>
+
+      <div class="osg-story">
+        {%- if l.headline %}
+        <h2 class="osg-story__headline">{{ l.headline }}</h2>
+        {%- endif %}
+        <p class="osg-story__body">{{ l.description }}</p>
+      </div>
+
+      <div class="osg-card">
+        <div class="osg-agent">
+          <p class="osg-agent__caption">Your host</p>
+          <p class="osg-agent__name">{{ a.fullName }}</p>
+          <p class="osg-agent__credential">{% if a.jobTitle %}{{ a.jobTitle }}{% else %}Realtor®{% endif %}{% if a.dre %} | DRE #{{ a.dre }}{% endif %}</p>
+          <div class="osg-agent__contact">
+            {%- if a.phone %}
+            <p class="osg-agent__line"><img src="assets/icon-phone.svg" alt="">{{ a.phone }}</p>
+            {%- endif %}
+            {%- if a.email %}
+            <p class="osg-agent__line"><img src="assets/icon-email.svg" alt="">{{ a.email }}</p>
+            {%- endif %}
+          </div>
+          <p class="osg-agent__cta"><b>{% if flyer.cta.heading %}{{ flyer.cta.heading }}{% else %}Come see it in person.{% endif %}</b> {% if flyer.cta.subline %}{{ flyer.cta.subline }}{% else %}Can’t make it? Call me for a private tour.{% endif %}</p>
+        </div>
+      </div>
+
+      <div class="osg-agent__cutout">
+        {%- if a.headshotCutoutUrl %}<img src="{{ a.headshotCutoutUrl }}" alt="{{ a.fullName }}">{% endif -%}
+      </div>
+
+
+
+      <div class="osg-legal">
+        <img src="assets/equal-housing-white.png" alt="Equal Housing Opportunity">
+        <img src="assets/realtor-white.png" alt="REALTOR®">
+        {# Word for word from brand/legal-text.md (Flyers). #}
+        <p class="osg-legal__text">Each office is Independently Owned &amp; Operated | Broker DRE# 01849354</p>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

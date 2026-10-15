@@ -1,0 +1,136 @@
+{#
+  Flyer / open-house-luxury
+  Nunjucks, rendered by the automation with one flyer.json (see sample.json
+  for the shape and notes.md for the rules on each field).
+
+  Empty strings arrive from the form, so every optional field is guarded with
+  {% if %}. Never rely on | default(): it only replaces undefined.
+#}
+{%- set l = flyer.listing -%}
+{%- set a = flyer.agentInfo -%}
+{%- set sessions = flyer.openHouse.sessions -%}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Open House · {{ l.street }}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="ohl ohl--sessions-{{ sessions | length }}">
+  <div class="ohl-sheet">
+
+    <img class="ohl-hero ohl-hero--dim" src="{{ l.heroImageUrl }}" alt=""{% if l.heroPositionX %} style="--hero-x: {{ l.heroPositionX }}%"{% endif %}>
+    <img class="ohl-hero ohl-hero--one" src="{{ l.heroImageUrl }}" alt=""{% if l.heroPositionX %} style="--hero-x: {{ l.heroPositionX }}%"{% endif %}>
+
+    <div class="ohl-trim">
+      <img class="ohl-numeral" src="assets/numeral-2.svg" alt="">
+
+      <div class="ohl-info">
+        <header class="ohl-header">
+          <div class="ohl-title">
+            <h1 class="ohl-title__type"><span class="ohl-title__lead">OPEN</span> HOUSE</h1>
+            <ul class="ohl-sessions">
+              {%- for s in sessions %}
+              <li class="ohl-session">{{ s.date }} · {{ s.time }}</li>
+              {%- endfor %}
+            </ul>
+          </div>
+          <div class="ohl-logo">
+            <img src="assets/logo-c21-masters-luxury-black.svg" alt="CENTURY 21 Masters Luxury">
+          </div>
+        </header>
+
+        <div class="ohl-content">
+          <section class="ohl-property">
+            <p class="ohl-address">{{ l.street }},<br>{{ l.city }}, {{ l.state }} {{ l.zip }}</p>
+
+            {%- if l.price %}
+            <div class="ohl-price">
+              <span class="ohl-price__label">{% if l.priceLabel %}{{ l.priceLabel }}{% else %}Offered at{% endif %}</span>
+              <span class="ohl-price__value">{{ l.price }}</span>
+            </div>
+            {%- endif %}
+
+            <div class="ohl-overview">
+              {%- if l.headline %}
+              <h2 class="ohl-overview__headline">{{ l.headline }}</h2>
+              {%- endif %}
+              <p class="ohl-overview__body">{{ l.description }}</p>
+            </div>
+
+            <div class="ohl-gallery">
+              {%- for src in l.galleryImageUrls %}
+              <div class="ohl-gallery__item"><img src="{{ src }}" alt=""></div>
+              {%- endfor %}
+            </div>
+          </section>
+
+          <ul class="ohl-stats">
+            {%- if l.beds %}
+            <li class="ohl-stat"><div class="ohl-stat__tile">
+              <img class="ohl-stat__icon" src="assets/icon-bed.svg" alt="">
+              <p class="ohl-stat__label">{{ l.beds }} {% if l.beds == "1" %}Bed{% else %}Beds{% endif %}</p>
+            </div></li>
+            {%- endif %}
+            {%- if l.baths %}
+            <li class="ohl-stat"><div class="ohl-stat__tile">
+              <img class="ohl-stat__icon" src="assets/icon-bath.svg" alt="">
+              <p class="ohl-stat__label">{{ l.baths }} {% if l.baths == "1" %}Bath{% else %}Baths{% endif %}</p>
+            </div></li>
+            {%- endif %}
+            {%- if l.sqft %}
+            <li class="ohl-stat"><div class="ohl-stat__tile">
+              <img class="ohl-stat__icon" src="assets/icon-sqft.svg" alt="">
+              <p class="ohl-stat__label">{{ l.sqft }}<br>sq ft</p>
+            </div></li>
+            {%- endif %}
+            {%- if l.garageSpaces %}
+            <li class="ohl-stat"><div class="ohl-stat__tile">
+              <img class="ohl-stat__icon" src="assets/icon-garage.svg" alt="">
+              <p class="ohl-stat__label">{{ l.garageSpaces }}-Car<br>Garage</p>
+            </div></li>
+            {%- endif %}
+            <li class="ohl-legal">
+              <div class="ohl-legal__marks">
+                <img src="assets/equal-housing-white.png" alt="Equal Housing Opportunity">
+                <img src="assets/realtor-white.png" alt="REALTOR®">
+              </div>
+              {# Word for word from brand/legal-text.md (Flyers). #}
+              <div class="ohl-legal__text">
+                <p>Each office is Independently Owned &amp; Operated | Broker DRE# 01849354</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <footer class="ohl-footer">
+        <div class="ohl-agent__photo">
+          {%- if a.headshotUrl %}<img src="{{ a.headshotUrl }}" alt="{{ a.fullName }}">{% endif -%}
+        </div>
+        <div class="ohl-agent__info">
+          <div class="ohl-agent__row">
+            <div>
+              <p class="ohl-agent__name">{{ a.fullName }}</p>
+              <p class="ohl-agent__credential">{% if a.jobTitle %}{{ a.jobTitle }}{% else %}Realtor®{% endif %}{% if a.dre %} | DRE #: {{ a.dre }}{% endif %}</p>
+            </div>
+            <div class="ohl-cta">
+              <p class="ohl-cta__heading">{% if flyer.cta.heading %}{{ flyer.cta.heading }}{% else %}Come see it in person!{% endif %}</p>
+              <p class="ohl-cta__sub">{% if flyer.cta.subline %}{{ flyer.cta.subline }}{% else %}Can’t make it? Call me for a private tour{% endif %}</p>
+            </div>
+          </div>
+          <div class="ohl-contact">
+            {%- if a.phone %}
+            <p class="ohl-contact__pill"><img src="assets/icon-phone.svg" alt="">{{ a.phone }}</p>
+            {%- endif %}
+            {%- if a.email %}
+            <p class="ohl-contact__pill"><img src="assets/icon-email.svg" alt="">{{ a.email }}</p>
+            {%- endif %}
+          </div>
+        </div>
+      </footer>
+    </div>
+
+  </div>
+</body>
+</html>

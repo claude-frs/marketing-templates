@@ -1,0 +1,521 @@
+/* ==========================================================================
+   Flyer / open-house-threshold
+   8.5 x 11 in, 0.125 in bleed. Relentless palette only. Light theme.
+
+   The idea: an open house is an open door. The listing photo stands in a
+   tall arched doorway; the gallery and the headshot repeat the arch at
+   smaller scale, and a turning seal on the door's edge says "come on in".
+
+   Units are pt. .oht-sheet is trim + bleed (630 x 810), .oht-trim is the
+   finished size (612 x 792) and everything is placed in trim coordinates.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Medium.otf") format("opentype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Bold.otf") format("opentype");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@page {
+  size: 8.75in 11.25in;
+  margin: 0;
+}
+
+.oht {
+  /* Relentless palette */
+  --gold: #beaf87;
+  --gold-med: #ded7c3;
+  --gold-lt: #f8f7f2;
+  --white: #ffffff;
+  --grey: #252526;
+  /* Secondary, accents only */
+  --dark-gold: #a19276;
+
+  --bleed: 9pt;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.oht {
+  background: #d9d9d9;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+@media print {
+  body.oht {
+    background: none;
+  }
+}
+
+/* :where() keeps this reset at single-class weight, so the spacing set on
+   each element below wins over it. */
+.oht :where(p, h1, h2, ul) {
+  margin: 0;
+  padding: 0;
+}
+
+.oht ul {
+  list-style: none;
+}
+
+.oht img {
+  display: block;
+}
+
+.oht-sheet {
+  position: relative;
+  width: 630pt;
+  height: 810pt;
+  overflow: hidden;
+  background: var(--gold-lt);
+  color: var(--grey);
+  font-family: "Oakes Grotesk", sans-serif;
+}
+
+.oht-trim {
+  position: absolute;
+  inset: var(--bleed);
+}
+
+/* A wash of the medium gold behind the door, running off the top and right
+   edges into the bleed, so the arch has something to stand in. */
+.oht-wash {
+  position: absolute;
+  top: calc(-1 * var(--bleed));
+  right: calc(-1 * var(--bleed));
+  width: calc(250pt + var(--bleed));
+  height: calc(416pt + var(--bleed));
+  background: var(--gold-med);
+  border-bottom-left-radius: 125pt;
+}
+
+.oht-logo {
+  position: absolute;
+  left: 30pt;
+  top: 30pt;
+  width: 139pt;
+  height: 43pt;
+}
+
+/* --------------------------------------------------------------------------
+   The door
+   -------------------------------------------------------------------------- */
+
+.oht-door {
+  position: absolute;
+  left: 292pt;
+  top: 30pt;
+  width: 290pt;
+  height: 360pt;
+}
+
+/* The outline, stepped down and left of the photo. */
+.oht-door::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translate(-14pt, 14pt);
+  border: 1.5pt solid var(--gold);
+  border-radius: 145pt 145pt 0 0;
+}
+
+.oht-door__photo {
+  position: absolute;
+  inset: 0;
+  border-radius: 145pt 145pt 0 0;
+  overflow: hidden;
+}
+
+.oht-door__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--hero-x, 50%) center;
+}
+
+/* The inner frame, like the reveal of a door casing. */
+.oht-door__photo::after {
+  content: "";
+  position: absolute;
+  inset: 10pt;
+  border: 0.75pt solid rgba(255, 255, 255, 0.75);
+  border-radius: 135pt 135pt 0 0;
+}
+
+/* The seal, pinned on the door's lower-left edge. */
+.oht-seal {
+  position: absolute;
+  left: 240pt;
+  top: 312pt;
+  width: 104pt;
+  height: 104pt;
+}
+
+/* --------------------------------------------------------------------------
+   Intro: kicker, title, dates
+   -------------------------------------------------------------------------- */
+
+/* 205 wide so the date rules stop short of the seal. */
+.oht-intro {
+  position: absolute;
+  left: 30pt;
+  top: 104pt;
+  width: 205pt;
+}
+
+.oht-kicker {
+  display: flex;
+  align-items: center;
+  gap: 8pt;
+  font-weight: 500;
+  font-size: 8pt;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.oht-kicker::before {
+  content: "";
+  width: 24pt;
+  height: 1pt;
+  background: var(--gold);
+}
+
+/* Title role: Typold Bold at the guideline's 64pt. */
+.oht-title {
+  margin-top: 12pt;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 64pt;
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  color: var(--grey);
+}
+
+.oht-title span {
+  display: block;
+  color: var(--gold);
+}
+
+.oht-dates {
+  margin-top: 18pt;
+}
+
+.oht-date {
+  display: flex;
+  align-items: center;
+  gap: 12pt;
+  padding: 7pt 0;
+  border-top: 0.75pt solid var(--gold);
+}
+
+.oht-date:last-child {
+  border-bottom: 0.75pt solid var(--gold);
+}
+
+/* The day of the month as an outlined numeral. */
+.oht-date__day {
+  flex-shrink: 0;
+  width: 66pt;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 48pt;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1pt var(--gold);
+}
+
+.oht-date__weekday {
+  font-weight: 700;
+  font-size: 9pt;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.oht-date__time {
+  font-size: 11pt;
+}
+
+/* Three dates: tighten so the list still clears the middle band. */
+.oht--sessions-3 .oht-date {
+  padding: 4pt 0;
+}
+
+.oht--sessions-2 .oht-date__day {
+  font-size: 40pt;
+}
+
+.oht--sessions-3 .oht-date__day {
+  font-size: 32pt;
+}
+
+/* --------------------------------------------------------------------------
+   Middle band: address and price, stats
+   -------------------------------------------------------------------------- */
+
+/* Address, price and story flow as one column, so a two-line street pushes
+   the story down instead of running into it. */
+.oht-lower {
+  position: absolute;
+  left: 30pt;
+  top: 428pt;
+  width: 280pt;
+  display: flex;
+  flex-direction: column;
+  gap: 16pt;
+}
+
+.oht-place__street {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 15pt;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.oht-place__city {
+  margin-top: 2pt;
+  font-size: 11pt;
+}
+
+.oht-place__price {
+  display: flex;
+  align-items: baseline;
+  gap: 8pt;
+  margin-top: 8pt;
+}
+
+.oht-place__label {
+  font-size: 10pt;
+}
+
+.oht-place__value {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 26pt;
+  color: var(--dark-gold);
+}
+
+.oht-stats {
+  position: absolute;
+  left: 330pt;
+  top: 434pt;
+  width: 252pt;
+  display: flex;
+}
+
+.oht-stat {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3pt;
+  text-align: center;
+}
+
+.oht-stat + .oht-stat {
+  border-left: 0.75pt solid var(--gold);
+}
+
+.oht-stat__icon {
+  width: 22pt;
+  height: 22pt;
+  margin-bottom: 3pt;
+}
+
+.oht-stat__value {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 14pt;
+  line-height: 1;
+}
+
+.oht-stat__unit {
+  font-weight: 500;
+  font-size: 7pt;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   Story: headline, description, call to action, three small doors
+   -------------------------------------------------------------------------- */
+
+.oht-story__headline {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 13pt;
+  line-height: 1.2;
+}
+
+.oht-story__body {
+  margin-top: 9pt;
+  font-size: 8.5pt;
+  line-height: 1.38;
+}
+
+.oht-story__cta {
+  margin-top: 10pt;
+  font-weight: 700;
+  font-size: 9pt;
+}
+
+.oht-doors {
+  position: absolute;
+  left: 326pt;
+  top: 522pt;
+  width: 256pt;
+  height: 142pt;
+  display: flex;
+  align-items: flex-end;
+  gap: 12pt;
+}
+
+.oht-doors__item {
+  position: relative;
+  flex: 1 1 0;
+  height: 122pt;
+  border-radius: 40pt 40pt 0 0;
+  overflow: hidden;
+}
+
+.oht-doors__item:nth-child(2) {
+  height: 142pt;
+}
+
+.oht-doors__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.oht-doors__item::after {
+  content: "";
+  position: absolute;
+  inset: 5pt;
+  border: 0.5pt solid rgba(255, 255, 255, 0.75);
+  border-radius: 35pt 35pt 0 0;
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+
+.oht-footer {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 698pt;
+  height: 76pt;
+  padding-top: 12pt;
+  border-top: 1pt solid var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 14pt;
+}
+
+.oht-agent__photo {
+  flex-shrink: 0;
+  position: relative;
+  width: 48pt;
+  height: 62pt;
+  border-radius: 24pt 24pt 0 0;
+  overflow: hidden;
+  background: var(--gold-med);
+}
+
+.oht-agent__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+}
+
+.oht-agent__name {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 14pt;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.oht-agent__credential {
+  white-space: nowrap;
+  font-size: 9pt;
+}
+
+.oht-contact {
+  margin-left: 6pt;
+  padding-left: 14pt;
+  border-left: 0.75pt solid var(--gold);
+  display: flex;
+  flex-direction: column;
+  gap: 4pt;
+}
+
+.oht-contact__line {
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+  font-size: 9.5pt;
+  white-space: nowrap;
+}
+
+.oht-contact__line img {
+  width: 13pt;
+  height: 13pt;
+}
+
+.oht-legal {
+  flex-shrink: 0;
+  margin-left: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 5pt;
+  width: 118pt;
+}
+
+.oht-legal__marks {
+  flex-shrink: 0;
+  width: 16pt;
+}
+
+.oht-legal__marks img {
+  width: 16pt;
+  height: auto;
+}
+
+.oht-legal__text {
+  font-size: 6pt;
+  line-height: 1.3;
+}

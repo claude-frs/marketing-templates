@@ -6,6 +6,79 @@ select one. The details of that flow, and the order form and automation that
 come after it, are planned separately. This file describes what the site is
 built on.
 
+## Right now this is a mock
+
+Decided 2026-10-15. The site is a clickable demo of the flow, built so the
+project can be pitched. It has no backend and sends nothing:
+
+- **Plain HTML, CSS and JS, no build step**, like `brand-experience-roadmap`.
+  Hosted on GitHub Pages from the repo root. Hash routes (`#/flyer/...`) so
+  Pages needs no server rules.
+- **The DRE "lookup" is fake.** Any 8 digits find the demo agent in
+  `data/demo.js` (Marcus Hale, the persona in the marketing-design samples).
+  Only the headshot can be replaced; everything else comes "from the agent
+  website".
+- **File inputs preview locally and upload nothing.** "Request my flyer"
+  shows a confirmation that walks through the planned automation and the
+  JSON it would receive.
+- **The preview is the real template.** `src/preview.js` renders each
+  template's own `page.njk` in the browser with Nunjucks, fed placeholder
+  data (labelled dark blocks for photos, "Street Address", "$0,000,000") that
+  is replaced live as the agent types. The design files are never edited.
+- **Every design is available.** The mock assumes the background-removal
+  step exists, so `AUTOMATION_PROVIDES` lists `headshotCutoutUrl` and the
+  cut-out designs use the demo agent's ready-made cut-out. The mechanism
+  (`requires` against `AUTOMATION_PROVIDES`) stays for the real build. Don't
+  label anything "Coming soon": that is a flyer type.
+- **No app bar, and no Luxury branding on the site's own chrome.** The order
+  screen's back control is a round arrow at the top left of the design.
+- **Template descriptions are one line on the feel of the design** ("A
+  cinematic poster for a big debut"), not a description of the layout.
+- Dark only, like the frs-offices gallery. Relentless palette, Typold and
+  Oakes Grotesk served from `design/brand/fonts/`.
+
+If the project goes ahead, the real site is built properly (frs-offices
+stack, real form and automation) and this mock is the reference for the flow.
+
+## Layout
+
+```
+index.html              the page shell; loads everything below in order
+data/manifest.js        THE FILE YOU EDIT: products, flyer types, templates
+data/demo.js            the demo agent and sample listing
+src/                    helpers, preview (Nunjucks render), gallery, order, main (router)
+assets/site.css         all styling
+assets/demo/            web-sized demo photos and headshot
+previews/<id>.webp      800 px gallery previews made from each sample.png
+design/                 copied from marketing-design, same paths, never edited
+vendor/nunjucks.min.js  Nunjucks 3.2.4 browser build
+scripts/sync-design.py  copies templates and fonts, makes previews, diffs the manifest
+```
+
+It must be served over http (Pages, or `python -m http.server`): the
+preview fetches `page.njk`, and browsers block that and the fonts from
+`file://`. `.claude/launch.json` has a `gallery` server on port 8321.
+
+## Keeping it in sync with marketing-design
+
+marketing-design is not a git repo, so "what's new" is found by comparing:
+
+1. Run `python scripts/sync-design.py` (default source
+   `../marketing-design`). It recopies every approved template folder into
+   `design/products/<product>/<id>/`, copies the fonts their CSS uses,
+   rebuilds `previews/` by rendering each flyer's `page.html` in headless
+   Edge or Chrome (falling back to `sample.png`), and lists templates that are in marketing-design but
+   missing from `data/manifest.js`, or the reverse.
+2. For each new template, read its `notes.md` and `page.njk` and add one
+   object to `TEMPLATES` in `data/manifest.js`: name, description, ground,
+   agent photo, which photo slots it uses, its call-to-action defaults, and
+   `requires`.
+3. A new flyer type with its own fields (Just Sold's `sale.*`, For Lease's
+   `lease.*`) also needs those fields added to the form in `src/order.js`,
+   which today knows the Open House shape only.
+4. Two-sided products will have `front.njk` / `back.njk`; the preview
+   currently renders `page.njk` only.
+
 ## The three repos
 
 | Repo | What it holds | Notes |
@@ -178,10 +251,17 @@ A cluttered or generic picker undercuts the designs it shows.
 
 ## Known gaps (not this repo's to fix, but they affect it)
 
-- **Legal text:** `brand/legal-text.md` is blank. Templates carry a
-  placeholder disclaimer. Nothing should go to print until it is filled in.
+- **Legal text:** flyers carry one line only, "Each office is Independently
+  Owned & Operated | Broker DRE# 01849354", now in `brand/legal-text.md`
+  (Flyers) and in every flyer template (2026-10-15). The rest of that file
+  is still blank. The templates' `sample.png` files still show the old
+  placeholder, so the gallery previews are rendered from `page.html`
+  instead (see the sync script).
 - **Font licences** for Typold and Oakes are unconfirmed for PDF embedding
-  and for the web.
+  and for the web. The mock serves them from GitHub Pages anyway; confirm
+  before the site is public.
+- **Barlow Semi Condensed** is not in `brand/fonts/`: only regular Barlow
+  is. The site does not use Barlow until the right files arrive.
 - **Logos:** some SVGs in `brand/logos/` are not true vectors. Replacements
   are coming.
 - **Sample photos** are AI-generated demo images. They are fine as gallery

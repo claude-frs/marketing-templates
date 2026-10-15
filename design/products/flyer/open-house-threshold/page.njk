@@ -1,0 +1,133 @@
+{#
+  Flyer / open-house-threshold
+  Same data shape as products/flyer/open-house-luxury, plus three parts of
+  each session (weekday, day, month) so the date can be set as a numeral.
+  Optional fields are guarded with {% if %}; never | default().
+#}
+{%- set l = flyer.listing -%}
+{%- set a = flyer.agentInfo -%}
+{%- set sessions = flyer.openHouse.sessions -%}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Open House · {{ l.street }}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="oht oht--sessions-{{ sessions | length }}">
+  <div class="oht-sheet">
+    <div class="oht-trim">
+
+      <div class="oht-wash"></div>
+      <img class="oht-logo" src="assets/logo-c21-masters-luxury-black.svg" alt="CENTURY 21 Masters Luxury">
+
+      <div class="oht-door">
+        <div class="oht-door__photo">
+          <img src="{{ l.heroImageUrl }}" alt=""{% if l.heroPositionX %} style="--hero-x: {{ l.heroPositionX }}%"{% endif %}>
+        </div>
+      </div>
+
+      <svg class="oht-seal" viewBox="0 0 104 104" aria-hidden="true">
+        <defs>
+          <path id="oht-seal-ring" d="M52,52 m-39,0 a39,39 0 1,1 78,0 a39,39 0 1,1 -78,0"/>
+        </defs>
+        <circle cx="52" cy="52" r="52" fill="#252526"/>
+        <circle cx="52" cy="52" r="48" fill="none" stroke="#beaf87" stroke-width="0.6"/>
+        <circle cx="52" cy="52" r="29" fill="none" stroke="#beaf87" stroke-width="0.6"/>
+        <g transform="rotate(-62 52 52)">
+          <text font-family="Typold" font-weight="500" font-size="8.2" fill="#beaf87" letter-spacing="1.2">
+            <textPath href="#oht-seal-ring" textLength="242" lengthAdjust="spacing">OPEN HOUSE · COME ON IN · OPEN HOUSE · COME ON IN ·</textPath>
+          </text>
+        </g>
+        <image href="assets/icon-sqft.svg" x="38" y="37" width="28" height="28"/>
+      </svg>
+
+      <div class="oht-intro">
+        <p class="oht-kicker">You're invited</p>
+        <h1 class="oht-title">Open<span>House</span></h1>
+        <ul class="oht-dates">
+          {%- for s in sessions %}
+          <li class="oht-date">
+            <span class="oht-date__day">{{ s.day }}</span>
+            <div>
+              <p class="oht-date__weekday">{{ s.weekday }} · {{ s.month }}</p>
+              <p class="oht-date__time">{{ s.time }}</p>
+            </div>
+          </li>
+          {%- endfor %}
+        </ul>
+      </div>
+
+      <div class="oht-lower">
+        <div class="oht-place">
+          <p class="oht-place__street">{{ l.street }}</p>
+          <p class="oht-place__city">{{ l.city }}, {{ l.state }} {{ l.zip }}</p>
+          {%- if l.price %}
+          <p class="oht-place__price">
+            <span class="oht-place__label">{% if l.priceLabel %}{{ l.priceLabel }}{% else %}Offered at{% endif %}</span>
+            <span class="oht-place__value">{{ l.price }}</span>
+          </p>
+          {%- endif %}
+        </div>
+        <div class="oht-story">
+          {%- if l.headline %}
+          <h2 class="oht-story__headline">{{ l.headline }}</h2>
+          {%- endif %}
+          <p class="oht-story__body">{{ l.description }}</p>
+          <p class="oht-story__cta">{% if flyer.cta.subline %}{{ flyer.cta.subline }}{% else %}Can’t make it? Call me for a private tour.{% endif %}</p>
+        </div>
+      </div>
+
+      <ul class="oht-stats">
+        {%- if l.beds %}
+        <li class="oht-stat"><img class="oht-stat__icon" src="assets/icon-bed.svg" alt=""><span class="oht-stat__value">{{ l.beds }}</span><span class="oht-stat__unit">{% if l.beds == "1" %}Bed{% else %}Beds{% endif %}</span></li>
+        {%- endif %}
+        {%- if l.baths %}
+        <li class="oht-stat"><img class="oht-stat__icon" src="assets/icon-bath.svg" alt=""><span class="oht-stat__value">{{ l.baths }}</span><span class="oht-stat__unit">{% if l.baths == "1" %}Bath{% else %}Baths{% endif %}</span></li>
+        {%- endif %}
+        {%- if l.sqft %}
+        <li class="oht-stat"><img class="oht-stat__icon" src="assets/icon-sqft.svg" alt=""><span class="oht-stat__value">{{ l.sqft }}</span><span class="oht-stat__unit">Sq Ft</span></li>
+        {%- endif %}
+        {%- if l.garageSpaces %}
+        <li class="oht-stat"><img class="oht-stat__icon" src="assets/icon-garage.svg" alt=""><span class="oht-stat__value">{{ l.garageSpaces }}-Car</span><span class="oht-stat__unit">Garage</span></li>
+        {%- endif %}
+      </ul>
+
+      <div class="oht-doors">
+        {%- for src in l.galleryImageUrls %}{% if loop.index > 1 %}
+        <div class="oht-doors__item"><img src="{{ src }}" alt=""></div>
+        {%- endif %}{% endfor %}
+      </div>
+
+      <footer class="oht-footer">
+        <div class="oht-agent__photo">
+          {%- if a.headshotUrl %}<img src="{{ a.headshotUrl }}" alt="{{ a.fullName }}">{% endif -%}
+        </div>
+        <div>
+          <p class="oht-agent__name">{{ a.fullName }}</p>
+          <p class="oht-agent__credential">{% if a.jobTitle %}{{ a.jobTitle }}{% else %}Realtor®{% endif %}{% if a.dre %} | DRE #{{ a.dre }}{% endif %}</p>
+        </div>
+        <div class="oht-contact">
+          {%- if a.phone %}
+          <p class="oht-contact__line"><img src="assets/icon-phone.svg" alt="">{{ a.phone }}</p>
+          {%- endif %}
+          {%- if a.email %}
+          <p class="oht-contact__line"><img src="assets/icon-email.svg" alt="">{{ a.email }}</p>
+          {%- endif %}
+        </div>
+        <div class="oht-legal">
+          <div class="oht-legal__marks">
+            <img src="assets/equal-housing-black.png" alt="Equal Housing Opportunity">
+            <img src="assets/realtor-black.png" alt="REALTOR®">
+          </div>
+          {# Word for word from brand/legal-text.md (Flyers). #}
+          <div class="oht-legal__text">
+            <p>Each office is Independently Owned &amp; Operated | Broker DRE# 01849354</p>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+</body>
+</html>

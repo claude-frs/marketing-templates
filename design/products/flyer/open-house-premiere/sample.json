@@ -1,0 +1,43 @@
+{
+  "template": "open-house-premiere",
+  "flyerType": "open-house",
+  "agentInfo": {
+    "fullName": "Marcus Hale",
+    "jobTitle": "Realtor®",
+    "dre": "02184736",
+    "phone": "(805) 555-0147",
+    "email": "marcus@halehomesca.com",
+    "headshotUrl": "assets/sample/headshot.png"
+  },
+  "listing": {
+    "street": "1847 Larkspur Ridge Drive",
+    "city": "Thousand Oaks",
+    "state": "CA",
+    "zip": "91362",
+    "priceLabel": "Offered at",
+    "price": "$2,095,000",
+    "beds": "4",
+    "baths": "3.5",
+    "sqft": "3,240",
+    "garageSpaces": "2",
+    "headline": "Modern Living, Designed in Warm Wood and Light",
+    "description": "Built in 2025, this 4-bedroom, 3.5-bath contemporary pairs cedar plank and charcoal finishes with floor-to-ceiling glass for a home that feels open, bright, and grounded. A chef’s kitchen with a large island flows into the open living and dining space, while upstairs the primary suite opens onto a private balcony with a walk-in closet and spa-style bath. A guest suite, flexible loft or office, smart home system, solar-ready roof, and attached 2-car garage complete 3,240 sq ft of thoughtfully designed living.",
+    "heroImageUrl": "assets/sample/hero.jpg",
+    "heroPositionX": "",
+    "galleryImageUrls": [
+      "assets/sample/hero.jpg",
+      "assets/sample/kitchen.png",
+      "assets/sample/living.png",
+      "assets/sample/bedroom.png"
+    ]
+  },
+  "openHouse": {
+    "sessions": [
+      { "date": "Saturday, October 24", "weekday": "Saturday", "month": "October", "day": "24", "time": "1:00 – 4:00 PM" }
+    ]
+  },
+  "cta": {
+    "heading": "",
+    "subline": ""
+  }
+}

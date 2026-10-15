@@ -1,0 +1,117 @@
+{#
+  Flyer / open-house-portrait
+  Same data shape as the other open house templates, plus
+  agentInfo.headshotCutoutUrl: the agent's headshot with the background
+  removed (transparent PNG or WebP), cut off straight at the bottom.
+  Reads session.date and session.time only.
+
+  Photos: the hero is the large photograph; all four gallery photos run in
+  a row under it.
+
+  Optional fields are guarded with {% if %}; never | default().
+#}
+{%- set l = flyer.listing -%}
+{%- set a = flyer.agentInfo -%}
+{%- set sessions = flyer.openHouse.sessions -%}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Open House · {{ l.street }}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="opt opt--sessions-{{ sessions | length }}">
+  <div class="opt-sheet">
+    <div class="opt-trim">
+
+      <div class="opt-sun-ring"></div>
+      <div class="opt-sun"></div>
+
+      <img class="opt-logo" src="assets/logo-c21-masters-luxury-black.svg" alt="CENTURY 21 Masters Luxury">
+
+      <ul class="opt-sessions">
+        {%- for s in sessions %}
+        <li class="opt-session"><span>{{ s.date }} <span class="opt-session__time">· {{ s.time }}</span></span></li>
+        {%- endfor %}
+      </ul>
+
+      <div class="opt-hero">
+        <img src="{{ l.heroImageUrl }}" alt=""{% if l.heroPositionX %} style="--hero-x: {{ l.heroPositionX }}%"{% endif %}>
+      </div>
+
+      <div class="opt-corner-dot"></div>
+
+      <div class="opt-band">
+        <h1 class="opt-title">Open <span>House</span></h1>
+        {%- if l.price %}
+        <p class="opt-price">
+          <span class="opt-price__label">{% if l.priceLabel %}{{ l.priceLabel }}{% else %}Offered at{% endif %}</span>
+          <span class="opt-price__value">{{ l.price }}</span>
+        </p>
+        {%- endif %}
+      </div>
+
+      <ul class="opt-stats">
+        {%- if l.beds %}
+        <li class="opt-stat"><img src="assets/icon-bed-dark.svg" alt=""><span class="opt-stat__value">{{ l.beds }}</span><span class="opt-stat__unit">{% if l.beds == "1" %}Bed{% else %}Beds{% endif %}</span></li>
+        {%- endif %}
+        {%- if l.baths %}
+        <li class="opt-stat"><img src="assets/icon-bath-dark.svg" alt=""><span class="opt-stat__value">{{ l.baths }}</span><span class="opt-stat__unit">{% if l.baths == "1" %}Bath{% else %}Baths{% endif %}</span></li>
+        {%- endif %}
+        {%- if l.sqft %}
+        <li class="opt-stat"><img src="assets/icon-sqft-dark.svg" alt=""><span class="opt-stat__value">{{ l.sqft }}</span><span class="opt-stat__unit">Sq Ft</span></li>
+        {%- endif %}
+        {%- if l.garageSpaces %}
+        <li class="opt-stat"><img src="assets/icon-garage-dark.svg" alt=""><span class="opt-stat__value">{{ l.garageSpaces }}-Car</span><span class="opt-stat__unit">Garage</span></li>
+        {%- endif %}
+      </ul>
+
+      <div class="opt-gallery">
+        {%- for src in l.galleryImageUrls %}
+        <div class="opt-gallery__item"><img src="{{ src }}" alt=""></div>
+        {%- endfor %}
+      </div>
+
+      <div class="opt-ring"></div>
+      <div class="opt-disc"></div>
+      <div class="opt-dot"></div>
+      <div class="opt-agent__cutout">
+        {%- if a.headshotCutoutUrl %}<img src="{{ a.headshotCutoutUrl }}" alt="{{ a.fullName }}">{% endif -%}
+      </div>
+
+      <div class="opt-detail">
+        <p class="opt-detail__street">{{ l.street }}</p>
+        <p class="opt-detail__city">{{ l.city }}, {{ l.state }} {{ l.zip }}</p>
+        {%- if l.headline %}
+        <h2 class="opt-detail__headline">{{ l.headline }}</h2>
+        {%- endif %}
+        <p class="opt-detail__body">{{ l.description }}</p>
+
+        <div class="opt-agent">
+          <div>
+            <p class="opt-agent__name">{{ a.fullName }}</p>
+            <p class="opt-agent__credential">{% if a.jobTitle %}{{ a.jobTitle }}{% else %}Realtor®{% endif %}{% if a.dre %} | DRE #{{ a.dre }}{% endif %}</p>
+          </div>
+          <div class="opt-agent__contact">
+            {%- if a.phone %}
+            <p class="opt-agent__line"><img src="assets/icon-phone.svg" alt="">{{ a.phone }}</p>
+            {%- endif %}
+            {%- if a.email %}
+            <p class="opt-agent__line"><img src="assets/icon-email.svg" alt="">{{ a.email }}</p>
+            {%- endif %}
+          </div>
+        </div>
+        <p class="opt-cta"><b>{% if flyer.cta.heading %}{{ flyer.cta.heading }}{% else %}Come see it in person.{% endif %}</b> {% if flyer.cta.subline %}{{ flyer.cta.subline }}{% else %}Can’t make it? Call me for a private tour.{% endif %}</p>
+      </div>
+
+      <div class="opt-legal">
+        <img src="assets/equal-housing-black.png" alt="Equal Housing Opportunity">
+        <img src="assets/realtor-black.png" alt="REALTOR®">
+        {# Word for word from brand/legal-text.md (Flyers). #}
+        <p class="opt-legal__text">Each office is Independently Owned &amp; Operated | Broker DRE# 01849354</p>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

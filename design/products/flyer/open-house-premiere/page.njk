@@ -1,0 +1,99 @@
+{#
+  Flyer / open-house-premiere
+  Same data shape as the other open house templates. Reads session.date and
+  session.time only.
+
+  Photos: the four gallery photos are the poster panels, in order. The hero
+  is the darkened backdrop of the agent band.
+
+  Optional fields are guarded with {% if %}; never | default().
+#}
+{%- set l = flyer.listing -%}
+{%- set a = flyer.agentInfo -%}
+{%- set sessions = flyer.openHouse.sessions -%}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Open House · {{ l.street }}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="opr opr--sessions-{{ sessions | length }}">
+  <div class="opr-sheet">
+    <div class="opr-trim">
+
+      <img class="opr-logo" src="assets/logo-c21-masters-luxury-black.svg" alt="CENTURY 21 Masters Luxury">
+
+      <div class="opr-fade"></div>
+      <div class="opr-panels">
+        {%- for src in l.galleryImageUrls %}
+        <div class="opr-panel"><img src="{{ src }}" alt=""></div>
+        {%- endfor %}
+      </div>
+
+      <div class="opr-billing">
+        <h1 class="opr-title">Open <span>House</span></h1>
+        <p class="opr-tagline">{{ l.street }} · {{ l.city }}, {{ l.state }} {{ l.zip }}</p>
+        <ul class="opr-sessions">
+          {%- for s in sessions %}
+          <li class="opr-session"><span>{{ s.date }} <span class="opr-session__time">· {{ s.time }}</span></span></li>
+          {%- endfor %}
+        </ul>
+        <ul class="opr-credits">
+          {%- if l.beds %}<li><b>{{ l.beds }}</b>{% if l.beds == "1" %}Bed{% else %}Beds{% endif %}</li>{% endif %}
+          {%- if l.baths %}<li><b>{{ l.baths }}</b>{% if l.baths == "1" %}Bath{% else %}Baths{% endif %}</li>{% endif %}
+          {%- if l.sqft %}<li><b>{{ l.sqft }}</b>Sq Ft</li>{% endif %}
+          {%- if l.garageSpaces %}<li><b>{{ l.garageSpaces }}-Car</b>Garage</li>{% endif %}
+        </ul>
+        {%- if l.price %}
+        <p class="opr-price">
+          <span class="opr-price__label">{% if l.priceLabel %}{{ l.priceLabel }}{% else %}Offered at{% endif %}</span>
+          <span class="opr-price__value">{{ l.price }}</span>
+        </p>
+        {%- endif %}
+      </div>
+
+      <div class="opr-band">
+        <div class="opr-band__photo">
+          <img src="{{ l.heroImageUrl }}" alt=""{% if l.heroPositionX %} style="--hero-x: {{ l.heroPositionX }}%"{% endif %}>
+        </div>
+      </div>
+
+      <div class="opr-agent__photo">
+        {%- if a.headshotUrl %}<img src="{{ a.headshotUrl }}" alt="{{ a.fullName }}">{% endif -%}
+      </div>
+      <div class="opr-agent">
+        <p class="opr-agent__name">{{ a.fullName }}</p>
+        <p class="opr-agent__credential">{% if a.jobTitle %}{{ a.jobTitle }}{% else %}Realtor®{% endif %}{% if a.dre %} | DRE #{{ a.dre }}{% endif %}</p>
+        <div class="opr-agent__contact">
+          {%- if a.phone %}
+          <p class="opr-agent__line"><img src="assets/icon-phone-gold.svg" alt="">{{ a.phone }}</p>
+          {%- endif %}
+          {%- if a.email %}
+          <p class="opr-agent__line"><img src="assets/icon-email-gold.svg" alt="">{{ a.email }}</p>
+          {%- endif %}
+        </div>
+        <div class="opr-agent__cta">
+          <p class="opr-agent__cta-heading">{% if flyer.cta.heading %}{{ flyer.cta.heading }}{% else %}Come see it in person.{% endif %}</p>
+          <p class="opr-agent__cta-sub">{% if flyer.cta.subline %}{{ flyer.cta.subline }}{% else %}Can’t make it? Call me for a private tour.{% endif %}</p>
+        </div>
+      </div>
+
+      <div class="opr-overview">
+        {%- if l.headline %}
+        <h2 class="opr-overview__headline">{{ l.headline }}</h2>
+        {%- endif %}
+        <p class="opr-overview__body">{{ l.description }}</p>
+      </div>
+
+      <div class="opr-legal">
+        <img src="assets/equal-housing-white.png" alt="Equal Housing Opportunity">
+        <img src="assets/realtor-white.png" alt="REALTOR®">
+        {# Word for word from brand/legal-text.md (Flyers). #}
+        <p class="opr-legal__text">Each office is Independently Owned &amp; Operated | Broker DRE# 01849354</p>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

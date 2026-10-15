@@ -1,0 +1,464 @@
+/* ==========================================================================
+   Flyer / open-house-premiere
+   8.5 x 11 in, 0.125 in bleed. Relentless palette only.
+
+   The idea: a film poster. Four photos in a 2 x 2 grid are the key art at
+   the top; the gold ground darkens behind and below them. The title, address, dates, stats and price sit
+   over the dark like a poster's title block and credits. Below, the house
+   itself is the backdrop of the agent band, darkened and faded in from the
+   left.
+
+   Units are pt. .opr-sheet is trim + bleed (630 x 810), .opr-trim is the
+   finished size (612 x 792) and everything is placed in trim coordinates.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Bold.otf") format("opentype");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@page {
+  size: 8.75in 11.25in;
+  margin: 0;
+}
+
+.opr {
+  /* Relentless palette */
+  --gold: #beaf87;
+  --gold-med: #ded7c3;
+  --gold-lt: #f8f7f2;
+  --white: #ffffff;
+  --grey: #252526;
+  --grey-rgb: 37, 37, 38;
+
+  --bleed: 9pt;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.opr {
+  background: #d9d9d9;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+@media print {
+  body.opr {
+    background: none;
+  }
+}
+
+/* :where() keeps the reset at single-class weight so element rules win. */
+.opr :where(p, h1, h2, ul) {
+  margin: 0;
+  padding: 0;
+}
+
+.opr ul {
+  list-style: none;
+}
+
+.opr img {
+  display: block;
+}
+
+.opr-sheet {
+  position: relative;
+  width: 630pt;
+  height: 810pt;
+  overflow: hidden;
+  background: var(--gold);
+  color: var(--gold-lt);
+  font-family: "Oakes Grotesk", sans-serif;
+}
+
+.opr-trim {
+  position: absolute;
+  inset: var(--bleed);
+}
+
+.opr-logo {
+  position: absolute;
+  left: 236.5pt;
+  top: 28pt;
+  width: 139pt;
+  height: 43pt;
+}
+
+/* --------------------------------------------------------------------------
+   The poster: four photos in a 2 x 2 grid, all shown in full. Behind them,
+   a full-width fade takes the gold ground to solid dark, so the photos sit
+   on gold at the top and on dark at the bottom, and the billing below runs
+   straight into the band. Nothing is laid over the photos.
+   -------------------------------------------------------------------------- */
+
+.opr-panels {
+  position: absolute;
+  left: 30pt;
+  top: 84pt;
+  width: 552pt;
+  /* Shorter when the schedule runs to more dates, so the billing never
+     covers a photo. */
+  height: 288pt;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10pt;
+}
+
+.opr--sessions-2 .opr-panels {
+  height: 270pt;
+}
+
+.opr--sessions-3 .opr-panels {
+  height: 256pt;
+}
+
+.opr-panel {
+  border-radius: 14pt;
+  overflow: hidden;
+  background: var(--gold-med);
+}
+
+.opr-panel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.opr-fade {
+  position: absolute;
+  left: calc(-1 * var(--bleed));
+  right: calc(-1 * var(--bleed));
+  /* From the middle of the grid down to the band: gold to solid dark by
+     the grid's bottom edge, then solid behind the billing. */
+  top: 236pt;
+  height: 334pt;
+  background: linear-gradient(
+    to bottom,
+    rgba(var(--grey-rgb), 0) 0%,
+    rgba(var(--grey-rgb), 0.7) 22%,
+    rgb(var(--grey-rgb)) 42%
+  );
+}
+
+/* Title block and credits, on the dark under the grid. Anchored at the
+   bottom; extra dates make it taller, and the grid gets shorter to match. */
+.opr-billing {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  bottom: 236pt;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.opr-tagline {
+  margin-top: 8pt;
+  font-weight: 700;
+  font-size: 8.5pt;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold-med);
+}
+
+.opr-title {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 66pt;
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--white);
+  white-space: nowrap;
+}
+
+.opr-title span {
+  color: var(--gold);
+}
+
+.opr-sessions {
+  margin-top: 10pt;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4pt;
+}
+
+/* Each date between two short gold rules. */
+.opr-session {
+  display: flex;
+  align-items: center;
+  gap: 12pt;
+  font-weight: 700;
+  font-size: 10pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--white);
+  white-space: nowrap;
+}
+
+.opr-session::before,
+.opr-session::after {
+  content: "";
+  width: 40pt;
+  border-top: 0.75pt solid var(--gold);
+}
+
+.opr-session__time {
+  font-weight: 400;
+}
+
+/* The credits line: stats in small spaced capitals, divided by gold bars. */
+.opr-credits {
+  margin-top: 12pt;
+  display: flex;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 8pt;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-med);
+}
+
+.opr-credits li {
+  padding: 0 11pt;
+  white-space: nowrap;
+}
+
+.opr-credits li + li {
+  border-left: 0.75pt solid var(--gold);
+}
+
+.opr-credits b {
+  font-family: "Typold", sans-serif;
+  font-size: 10pt;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  margin-right: 3pt;
+}
+
+.opr-price {
+  margin-top: 8pt;
+  display: flex;
+  align-items: baseline;
+  gap: 10pt;
+}
+
+.opr-price__label {
+  font-weight: 700;
+  font-size: 7.5pt;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-med);
+}
+
+.opr-price__value {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 24pt;
+  color: var(--gold);
+}
+
+/* --------------------------------------------------------------------------
+   The band: the house as a darkened backdrop on the right, faded in from
+   the left, with the agent and the overview over it.
+   -------------------------------------------------------------------------- */
+
+.opr-band {
+  position: absolute;
+  left: calc(-1 * var(--bleed));
+  right: calc(-1 * var(--bleed));
+  top: 566pt;
+  bottom: calc(-1 * var(--bleed));
+  background: var(--grey);
+  overflow: hidden;
+}
+
+.opr-band__photo {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 400pt;
+  /* Fade in from the left and from the top, so there is no hard edge
+     against the dark. */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, #000 55%),
+    linear-gradient(to bottom, transparent 0%, #000 30%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, #000 55%),
+    linear-gradient(to bottom, transparent 0%, #000 30%);
+  mask-composite: intersect;
+}
+
+.opr-band__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--hero-x, 50%) center;
+}
+
+/* Darken the photo so the overview stays readable over it. */
+.opr-band__photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(var(--grey-rgb), 0.66);
+}
+
+.opr-agent__photo {
+  position: absolute;
+  left: 30pt;
+  top: 580pt;
+  width: 116pt;
+  height: 156pt;
+  border-radius: 14pt;
+  overflow: hidden;
+  border: 2pt solid var(--gold);
+  background: var(--gold-med);
+}
+
+.opr-agent__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+}
+
+.opr-agent {
+  position: absolute;
+  left: 160pt;
+  top: 580pt;
+  width: 180pt;
+  height: 156pt;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.opr-agent__name {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 16pt;
+  line-height: 1.15;
+  color: var(--gold);
+  text-wrap: balance;
+}
+
+.opr-agent__credential {
+  margin-top: 2pt;
+  font-size: 8.5pt;
+  white-space: nowrap;
+}
+
+.opr-agent__contact {
+  margin-top: 10pt;
+  display: flex;
+  flex-direction: column;
+  gap: 4pt;
+}
+
+.opr-agent__line {
+  display: flex;
+  align-items: center;
+  gap: 6pt;
+  font-size: 8.5pt;
+  white-space: nowrap;
+}
+
+.opr-agent__line img {
+  width: 12pt;
+  height: 12pt;
+}
+
+.opr-agent__cta {
+  margin-top: 12pt;
+  padding-top: 8pt;
+  border-top: 0.75pt solid var(--gold);
+}
+
+.opr-agent__cta-heading {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 10.5pt;
+  color: var(--white);
+}
+
+.opr-agent__cta-sub {
+  font-size: 8pt;
+  color: var(--gold-med);
+}
+
+.opr-overview {
+  position: absolute;
+  left: 356pt;
+  top: 580pt;
+  width: 226pt;
+}
+
+.opr-overview__headline {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 12pt;
+  line-height: 1.2;
+  color: var(--gold);
+  text-wrap: balance;
+}
+
+.opr-overview__body {
+  margin-top: 6pt;
+  font-size: 8.25pt;
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+
+.opr-legal {
+  position: absolute;
+  left: 30pt;
+  top: 760pt;
+  width: 552pt;
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+  color: var(--gold-med);
+}
+
+.opr-legal img {
+  height: 11pt;
+  width: auto;
+}
+
+.opr-legal__text {
+  margin-left: 2pt;
+  font-size: 6pt;
+}
