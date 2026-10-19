@@ -1,0 +1,429 @@
+/* ==========================================================================
+   Flyer / just-listed-ledger
+   8.5 x 11 in, 0.125 in bleed. Relentless palette only. Dark ground.
+
+   The idea: set like a fine-dining menu or a private-bank statement. The
+   photos are a mosaic (the house large, three interiors stacked beside
+   it). The price is the big numeral. The three figures are a ledger with
+   dot leaders running to their values, and the features are listed
+   beside it. The agent stands at the foot of the page, cut by its edge,
+   with their details beside them.
+
+   Units are pt. .jll-sheet is trim + bleed (630 x 810), .jll-trim is the
+   finished size (612 x 792) and everything is placed in trim coordinates.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Medium.otf") format("opentype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Bold.otf") format("opentype");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@page {
+  size: 8.75in 11.25in;
+  margin: 0;
+}
+
+.jll {
+  /* Relentless palette */
+  --gold: #beaf87;
+  --gold-med: #ded7c3;
+  --gold-lt: #f8f7f2;
+  --white: #ffffff;
+  --grey: #252526;
+
+  --bleed: 9pt;
+  --hair: 0.75pt solid rgba(190, 175, 135, 0.55);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.jll {
+  background: #d9d9d9;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+@media print {
+  body.jll {
+    background: none;
+  }
+}
+
+/* :where() keeps the reset at single-class weight so element rules win. */
+.jll :where(p, h1, h2, ul) {
+  margin: 0;
+  padding: 0;
+}
+
+.jll ul {
+  list-style: none;
+}
+
+.jll img {
+  display: block;
+}
+
+.jll-sheet {
+  position: relative;
+  width: 630pt;
+  height: 810pt;
+  overflow: hidden;
+  background: var(--grey);
+  color: var(--gold-lt);
+  font-family: "Oakes Grotesk", sans-serif;
+}
+
+.jll-trim {
+  position: absolute;
+  inset: var(--bleed);
+}
+
+/* --------------------------------------------------------------------------
+   Header
+   -------------------------------------------------------------------------- */
+
+.jll-top {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 30pt;
+  height: 25pt;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.jll-logo {
+  height: 25pt;
+  width: auto;
+}
+
+.jll-top__place {
+  font-weight: 700;
+  font-size: 7.5pt;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold-med);
+}
+
+.jll-title {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 74pt;
+  padding-bottom: 12pt;
+  border-bottom: var(--hair);
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 46pt;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--white);
+  white-space: nowrap;
+}
+
+.jll-title span {
+  color: var(--gold);
+}
+
+/* --------------------------------------------------------------------------
+   The column below the title: mosaic, price, ledger. The mosaic takes the
+   height that is left, so a long feature list shrinks the photos instead
+   of running into the agent.
+   -------------------------------------------------------------------------- */
+
+.jll-main {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 146pt;
+  bottom: 168pt;
+  display: flex;
+  flex-direction: column;
+}
+
+.jll-mosaic {
+  flex: 1 1 0;
+  min-height: 190pt;
+  max-height: 250pt;
+  display: grid;
+  grid-template-columns: 1fr 176pt;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 8pt;
+}
+
+.jll-mosaic div {
+  overflow: hidden;
+}
+
+.jll-mosaic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.jll-mosaic__hero {
+  grid-row: 1 / -1;
+}
+
+.jll-mosaic__hero img {
+  object-position: var(--hero-x, 50%) center;
+}
+
+.jll-price {
+  margin-top: 18pt;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16pt;
+}
+
+.jll-price__label {
+  font-weight: 700;
+  font-size: 7pt;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold-med);
+}
+
+.jll-price__value {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 54pt;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+.jll-address {
+  text-align: right;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 12pt;
+  line-height: 1.2;
+  color: var(--white);
+  text-wrap: balance;
+}
+
+.jll-address span {
+  display: block;
+  font-family: "Oakes Grotesk", sans-serif;
+  font-weight: 400;
+  font-size: 9pt;
+  color: var(--gold-med);
+}
+
+.jll-book {
+  margin-top: 16pt;
+  padding-top: 12pt;
+  border-top: var(--hair);
+  display: flex;
+  gap: 26pt;
+}
+
+.jll-book__caption {
+  margin-bottom: 6pt;
+  font-weight: 700;
+  font-size: 7pt;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* The ledger: label, dot leader, value. */
+.jll-ledger {
+  flex: 0 0 196pt;
+}
+
+.jll-entry {
+  display: flex;
+  align-items: baseline;
+  gap: 6pt;
+  padding: 3pt 0;
+  font-size: 9.5pt;
+}
+
+.jll-entry i {
+  flex: 1 1 0;
+  border-bottom: 1pt dotted rgba(190, 175, 135, 0.7);
+  transform: translateY(-3pt);
+}
+
+.jll-entry b {
+  font-family: "Typold", sans-serif;
+  font-size: 12pt;
+  color: var(--white);
+}
+
+.jll-features {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.jll-features ul {
+  columns: 2;
+  column-gap: 16pt;
+}
+
+.jll-feature {
+  break-inside: avoid;
+  display: flex;
+  gap: 7pt;
+  padding: 2.5pt 0;
+  font-size: 8.5pt;
+  line-height: 1.3;
+}
+
+.jll-feature::before {
+  content: "";
+  flex-shrink: 0;
+  width: 8pt;
+  margin-top: 5.5pt;
+  height: 0;
+  border-top: 1pt solid var(--gold);
+}
+
+/* --------------------------------------------------------------------------
+   The agent, standing at the foot of the page
+   -------------------------------------------------------------------------- */
+
+.jll-cutout {
+  position: absolute;
+  left: 22pt;
+  width: 130pt;
+  bottom: calc(-1 * var(--bleed));
+  height: calc(150pt + var(--bleed));
+}
+
+.jll-cutout img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+.jll-agent {
+  position: absolute;
+  left: 168pt;
+  right: 30pt;
+  top: 646pt;
+  padding-top: 12pt;
+  border-top: var(--hair);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16pt;
+}
+
+.jll-agent__caption {
+  font-weight: 700;
+  font-size: 7pt;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.jll-agent__name {
+  margin-top: 3pt;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 17pt;
+  line-height: 1.1;
+  color: var(--white);
+  text-wrap: balance;
+}
+
+.jll-agent__credential {
+  margin-top: 2pt;
+  font-size: 8pt;
+  color: var(--gold-med);
+  white-space: nowrap;
+}
+
+.jll-agent__right {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.jll-contact p {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6pt;
+  margin-top: 3pt;
+  font-size: 9pt;
+  white-space: nowrap;
+}
+
+.jll-contact img {
+  width: 11pt;
+  height: 11pt;
+}
+
+.jll-cta {
+  margin-top: 10pt;
+  font-size: 8pt;
+  color: var(--gold-med);
+  white-space: nowrap;
+}
+
+.jll-cta b {
+  display: block;
+  font-family: "Typold", sans-serif;
+  font-size: 10.5pt;
+  color: var(--white);
+}
+
+.jll-legal {
+  position: absolute;
+  left: 168pt;
+  right: 30pt;
+  top: 762pt;
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+  color: var(--gold-med);
+}
+
+.jll-legal img {
+  height: 11pt;
+  width: auto;
+}
+
+.jll-legal p {
+  margin-left: 2pt;
+  font-size: 6pt;
+}

@@ -39,6 +39,8 @@ project can be pitched. It has no backend and sends nothing:
 
 If the project goes ahead, the real site is built properly (frs-offices
 stack, real form and automation) and this mock is the reference for the flow.
+The mock stays up after that, for design review and test runs of the flow,
+so keep it in sync with marketing-design.
 
 ## Layout
 
@@ -73,9 +75,11 @@ marketing-design is not a git repo, so "what's new" is found by comparing:
    object to `TEMPLATES` in `data/manifest.js`: name, description, ground,
    agent photo, which photo slots it uses, its call-to-action defaults, and
    `requires`.
-3. A new flyer type with its own fields (Just Sold's `sale.*`, For Lease's
-   `lease.*`) also needs those fields added to the form in `src/order.js`,
-   which today knows the Open House shape only.
+3. The form is built from each template's `fields` list (see the comment
+   above `TEMPLATES`): `sessions`, `price`, `stats`, `garage`, `headline`,
+   `description`, `features`, `sale`, `message`. A new type that needs a
+   field not on that list (For Lease's `lease.*`, Coming Soon's
+   `comingSoon.expected`) needs it added to `src/order.js`.
 4. Two-sided products will have `front.njk` / `back.njk`; the preview
    currently renders `page.njk` only.
 
@@ -101,7 +105,7 @@ Each product is a folder in `marketing-design/products/`. Sizes are in
 
 | Product | Finished size | Medium | Templates today |
 |---|---|---|---|
-| Flyer | 8.5 x 11 in | Print | **5** (all Open House) |
+| Flyer | 8.5 x 11 in | Print | **15**: 5 Open House, 5 Just Listed, 5 Just Sold |
 | Postcard | 4 x 6 in | Print, two-sided | none yet |
 | Postcard | 6 x 9 in | Print, two-sided | none yet |
 | Postcard | 6 x 11 in | Print, two-sided | none yet |
@@ -126,8 +130,12 @@ each one needs, are in `marketing-design/products/flyer/flyer-types.md`:
 Just Listed, Open House, Broker's Open, Coming Soon, Price Improved, Under
 Contract, Back on Market, Just Sold, For Lease.
 
-Only **Open House** has templates so far. Other types will get their own
-designs, and some designs may later carry more than one type.
+**Open House**, **Just Listed** and **Just Sold** have templates (synced
+2026-10-20). Other types will get their own designs, and some designs may
+later carry more than one type. Just Listed adds `listing.features` (3 to
+10 lines); Just Sold adds `sale { soldPriceLabel, soldPrice, side, message }`
+and an optional `agentInfo.website`. Each design's `notes.md` says which of
+these it prints; `data/manifest.js` records it as `fields`.
 
 ## The flyer templates
 

@@ -51,76 +51,193 @@ const FLYER_TYPES = [
 
   description      one line on the feel of the design, shown in the gallery
 
+  fields           which parts of the form this design uses:
+                     sessions      open house dates (1 to 3)
+                     price         listing.price and priceLabel
+                     stats         beds, baths, sq ft
+                     garage        garageSpaces
+                     headline, description
+                     features      listing.features, a list of 3 to 10 lines
+                     sale          sale.soldPriceLabel, soldPrice, side
+                     message       sale.message (a design default if empty)
+  limits           text lengths the layout is tested at
   photos.hero      what the hero photo does in this design
-  photos.gallery   which of the four gallery photos it shows (0-based)
+  photos.gallery   which galleryImageUrls entries it shows (0-based)
+  photos.min       how many of those are required (the rest are optional)
   sessionParts     true if it prints weekday / month / day separately
   cta              which call-to-action lines it prints, with its defaults
   requires         agentInfo fields beyond the usual ones
 */
+const OPEN_HOUSE = ["sessions", "price", "stats", "garage", "headline", "description"];
+const LISTED_CTA = { heading: "Want to see it?", subline: "Call me for a private tour." };
+const SOLD_CTA = { heading: "Thinking of selling?", subline: "Call me for a free home valuation." };
+
 const TEMPLATES = [
+  /* ---------- Open House ---------- */
   {
-    id: "open-house-luxury", product: "flyer",
-    types: ["open-house"],
+    id: "open-house-luxury", product: "flyer", types: ["open-house"],
     name: "Luxury",
     description: "Bold and dramatic, for homes that make a statement.",
-    ground: "dark", palette: "relentless",
-    agentPhoto: "Round headshot",
-    photos: { hero: "Seen through the “1”", gallery: [0, 1, 2, 3] },
+    ground: "dark", palette: "relentless", agentPhoto: "Round headshot",
+    fields: OPEN_HOUSE, limits: { headline: 60, description: 520 },
+    photos: { hero: "Seen through the “1”", gallery: [0, 1, 2, 3], min: 4 },
     sessionParts: false,
     cta: { heading: "Come see it in person!", subline: "Can’t make it? Call me for a private tour" },
     requires: [],
     approved: "2026-10-15",
   },
   {
-    id: "open-house-threshold", product: "flyer",
-    types: ["open-house"],
+    id: "open-house-threshold", product: "flyer", types: ["open-house"],
     name: "Threshold",
     description: "Bright and welcoming, like an open front door.",
-    ground: "light", palette: "relentless",
-    agentPhoto: "Arched headshot",
-    photos: { hero: "Inside the doorway", gallery: [1, 2, 3] },
+    ground: "light", palette: "relentless", agentPhoto: "Arched headshot",
+    fields: OPEN_HOUSE, limits: { headline: 60, description: 520 },
+    photos: { hero: "Inside the doorway", gallery: [1, 2, 3], min: 3 },
     sessionParts: true,
     cta: { subline: "Can’t make it? Call me for a private tour." },
     requires: [],
     approved: "2026-10-15",
   },
   {
-    id: "open-house-premiere", product: "flyer",
-    types: ["open-house"],
+    id: "open-house-premiere", product: "flyer", types: ["open-house"],
     name: "Premiere",
     description: "A cinematic poster for a big debut.",
-    ground: "gold to dark", palette: "relentless",
-    agentPhoto: "Rounded headshot",
-    photos: { hero: "Faded backdrop behind you", gallery: [0, 1, 2, 3] },
+    ground: "gold to dark", palette: "relentless", agentPhoto: "Rounded headshot",
+    fields: OPEN_HOUSE, limits: { headline: 60, description: 520 },
+    photos: { hero: "Faded backdrop behind you", gallery: [0, 1, 2, 3], min: 4 },
     sessionParts: false,
     cta: { heading: "Come see it in person.", subline: "Can’t make it? Call me for a private tour." },
     requires: [],
     approved: "2026-10-15",
   },
   {
-    id: "open-house-signature", product: "flyer",
-    types: ["open-house"],
+    id: "open-house-signature", product: "flyer", types: ["open-house"],
     name: "Signature",
     description: "Polished and editorial, like a magazine ad.",
-    ground: "dark", palette: "relentless",
-    agentPhoto: "Cut-out on a gold card",
-    photos: { hero: "Full bleed across the top", gallery: [1, 2, 3] },
+    ground: "dark", palette: "relentless", agentPhoto: "Cut-out on a gold card",
+    fields: OPEN_HOUSE, limits: { headline: 60, description: 520 },
+    photos: { hero: "Full bleed across the top", gallery: [1, 2, 3], min: 3 },
     sessionParts: false,
     cta: { heading: "Come see it in person.", subline: "Can’t make it? Call me for a private tour." },
     requires: ["headshotCutoutUrl"],
     approved: "2026-10-15",
   },
   {
-    id: "open-house-portrait", product: "flyer",
-    types: ["open-house"],
+    id: "open-house-portrait", product: "flyer", types: ["open-house"],
     name: "Portrait",
     description: "Soft and personal, with you front and center.",
-    ground: "light grey", palette: "relentless",
-    agentPhoto: "Cut-out in front of a disc",
-    photos: { hero: "The large photograph", gallery: [0, 1, 2, 3] },
+    ground: "light grey", palette: "relentless", agentPhoto: "Cut-out in front of a disc",
+    fields: OPEN_HOUSE, limits: { headline: 60, description: 520 },
+    photos: { hero: "The large photograph", gallery: [0, 1, 2, 3], min: 4 },
     sessionParts: false,
     cta: { heading: "Come see it in person.", subline: "Can’t make it? Call me for a private tour." },
     requires: ["headshotCutoutUrl"],
     approved: "2026-10-15",
+  },
+
+  /* ---------- Just Listed ---------- */
+  {
+    id: "just-listed-cover", product: "flyer", types: ["just-listed"],
+    name: "Cover",
+    description: "A magazine cover, with your listing as the lead story.",
+    ground: "dark", palette: "relentless", agentPhoto: "Round headshot",
+    fields: ["price", "stats", "headline", "features"], limits: { headline: 60, features: 10 },
+    photos: { hero: "The cover image", gallery: [1, 2, 3], min: 3 },
+    sessionParts: false, cta: LISTED_CTA, requires: [],
+    approved: "2026-10-16",
+  },
+  {
+    id: "just-listed-index", product: "flyer", types: ["just-listed"],
+    name: "Index",
+    description: "Clean and precise, on a Swiss editorial grid.",
+    ground: "white", palette: "relentless", agentPhoto: "Square headshot",
+    fields: ["price", "stats", "headline", "description", "features"], limits: { headline: 60, description: 420, features: 10 },
+    photos: { hero: "The main photograph", gallery: [1, 2, 3], min: 3 },
+    sessionParts: false, cta: LISTED_CTA, requires: [],
+    approved: "2026-10-16",
+  },
+  {
+    id: "just-listed-ledger", product: "flyer", types: ["just-listed"],
+    name: "Ledger",
+    description: "Quietly luxurious, set like a fine-dining menu.",
+    ground: "dark", palette: "relentless", agentPhoto: "Cut-out, “Presented by”",
+    fields: ["price", "stats", "features"], limits: { features: 10 },
+    photos: { hero: "The large photo in the mosaic", gallery: [1, 2, 3], min: 3 },
+    sessionParts: false, cta: LISTED_CTA, requires: ["headshotCutoutUrl"],
+    approved: "2026-10-16",
+  },
+  {
+    id: "just-listed-gallery", product: "flyer", types: ["just-listed"],
+    name: "Gallery",
+    description: "Let the photographs do the talking.",
+    ground: "gold", palette: "relentless", agentPhoto: "Portrait headshot",
+    fields: ["price", "stats", "features"], limits: { features: 10 },
+    photos: { hero: "The large photo", gallery: [0, 1, 2, 3, 4, 5], min: 3 },
+    sessionParts: false, cta: LISTED_CTA, requires: [],
+    approved: "2026-10-16",
+  },
+  {
+    id: "just-listed-angle", product: "flyer", types: ["just-listed"],
+    name: "Angle",
+    description: "Sharp and modern, cut on a confident diagonal.",
+    ground: "light grey", palette: "relentless", agentPhoto: "Round headshot",
+    fields: ["price", "stats", "garage"], limits: {},
+    photos: { hero: "Full bleed above the diagonal", gallery: [0, 1, 2, 3, 4], min: 1 },
+    sessionParts: false, cta: LISTED_CTA, requires: [],
+    approved: "2026-10-17",
+  },
+
+  /* ---------- Just Sold ---------- */
+  {
+    id: "just-sold-congrats", product: "flyer", types: ["just-sold"],
+    name: "Congrats",
+    description: "A warm welcome home for the new owners.",
+    ground: "dark", palette: "relentless", agentPhoto: "Round headshot",
+    fields: ["stats", "garage", "sale", "message"], limits: { message: 90 },
+    photos: { hero: "Full bleed, fading into dark", gallery: [], min: 0 },
+    sessionParts: false, cta: SOLD_CTA, requires: [],
+    messageDefault: "It was a joy to help make [street name] home.",
+    approved: "2026-10-17",
+  },
+  {
+    id: "just-sold-keys", product: "flyer", types: ["just-sold"],
+    name: "Keys",
+    description: "You, handing over the keys.",
+    ground: "dark", palette: "relentless", agentPhoto: "Cut-out holding the keys",
+    fields: ["stats", "garage", "sale", "message"], limits: { message: 90 },
+    photos: { hero: "Faint behind you", gallery: [], min: 0 },
+    sessionParts: false, cta: SOLD_CTA, requires: ["headshotCutoutUrl"],
+    messageDefault: "Congratulations to the new owners of [street], and welcome to [city].",
+    approved: "2026-10-17",
+  },
+  {
+    id: "just-sold-script", product: "flyer", types: ["just-sold"],
+    name: "Script",
+    description: "Lively and bright, with a flourish.",
+    ground: "white", palette: "relentless", agentPhoto: "Round headshot",
+    fields: ["stats", "garage", "sale"], limits: {},
+    photos: { hero: "Meets the white panel on a diagonal", gallery: [0, 1, 2], min: 0 },
+    sessionParts: false, cta: SOLD_CTA, requires: [],
+    approved: "2026-10-17",
+  },
+  {
+    id: "just-sold-mosaic", product: "flyer", types: ["just-sold"],
+    name: "Mosaic",
+    description: "Layered and celebratory, made to be noticed.",
+    ground: "light grey", palette: "relentless", agentPhoto: "Round headshot, “Sold by”",
+    fields: ["stats", "garage", "sale"], limits: {},
+    photos: { hero: "Over an offset gold block", gallery: [0, 1], min: 0 },
+    sessionParts: false, cta: SOLD_CTA, requires: [],
+    approved: "2026-10-19",
+  },
+  {
+    id: "just-sold-rider", product: "flyer", types: ["just-sold"],
+    name: "Rider",
+    description: "The sold sign, made into a flyer.",
+    ground: "gold", palette: "relentless", agentPhoto: "Round headshot",
+    fields: ["stats", "garage", "sale"], limits: {},
+    photos: { hero: "In the sign panel", gallery: [0, 1, 2], min: 0 },
+    sessionParts: false, cta: SOLD_CTA, requires: [],
+    approved: "2026-10-20",
   },
 ];

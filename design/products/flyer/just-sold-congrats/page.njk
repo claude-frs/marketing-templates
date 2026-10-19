@@ -1,0 +1,93 @@
+{#
+  Flyer / just-sold-congrats
+  Just Sold data shape: listing (address, beds, baths, sqft, garageSpaces,
+  photos) plus sale { soldPriceLabel, soldPrice, side }. soldPrice is
+  optional (the seller must agree to show it); side is "seller", "buyer",
+  "both" or empty. No features, headline or description. See notes.md.
+
+  Photos: the hero, full bleed across the top. sale.message, if set,
+  replaces the warm line under the headline.
+
+  Optional fields are guarded with {% if %}; never | default().
+#}
+{%- set l = flyer.listing -%}
+{%- set a = flyer.agentInfo -%}
+{%- set s = flyer.sale or {} -%}
+{%- set sides = { "seller": "Represented the seller", "buyer": "Represented the buyer", "both": "Represented the buyer and seller" } -%}
+{%- set side = sides[s.side] if s.side else "" -%}
+{%- set ctaHead = flyer.cta.heading if flyer.cta and flyer.cta.heading else "Thinking of selling?" -%}
+{%- set ctaSub = flyer.cta.subline if flyer.cta and flyer.cta.subline else "Call me for a free home valuation." -%}
+{%- set others = [] -%}
+{%- for src in l.galleryImageUrls or [] %}{% if src and src != l.heroImageUrl and others.length < 0 %}{% set _n = others.push(src) %}{% endif %}{% endfor -%}
+{%- set words = (l.street or "").split(" ") -%}
+{%- set streetName = words.slice(1).join(" ") if r/^\d/.test(words[0]) else l.street -%}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Just Sold · {{ l.street }}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="jcg">
+  <div class="jcg-sheet">
+    <div class="jcg-hero"><img src="{{ l.heroImageUrl }}" alt=""{% if l.heroPositionX %} style="--hero-x: {{ l.heroPositionX }}%"{% endif %}></div>
+    <div class="jcg-trim">
+
+      <div class="jcg-top">
+        <img class="jcg-logo" src="assets/c21-masters-white.svg" alt="CENTURY 21 Masters">
+        <p class="jcg-caption">{{ l.city }}, {{ l.state }}</p>
+      </div>
+
+      <h1 class="jcg-sold">Sold</h1>
+      <p class="jcg-headline">Congratulations to the new owners!</p>
+      <p class="jcg-message">{% if s.message %}{{ s.message }}{% else %}It was a joy to help make {{ streetName }} home.{% endif %}</p>
+
+      <div class="jcg-details">
+        <div>
+          <p class="jcg-address">{{ l.street }} <span>· {{ l.city }}, {{ l.state }} {{ l.zip }}</span></p>
+          <p class="jcg-figures">
+            {%- if l.beds %}<span><b>{{ l.beds }}</b>{% if l.beds == "1" %}Bed{% else %}Beds{% endif %}</span>{% endif %}
+            {%- if l.baths %}<span><b>{{ l.baths }}</b>{% if l.baths == "1" %}Bath{% else %}Baths{% endif %}</span>{% endif %}
+            {%- if l.sqft %}<span><b>{{ l.sqft }}</b>Sq Ft</span>{% endif %}
+            {%- if l.garageSpaces %}<span><b>{{ l.garageSpaces }}-Car</b>Garage</span>{% endif %}
+          </p>
+        </div>
+        {%- if s.soldPrice or side %}
+        <div class="jcg-price">
+          {%- if s.soldPrice %}
+          <p class="jcg-caption jcg-price__caption">{% if s.soldPriceLabel %}{{ s.soldPriceLabel }}{% else %}Sold for{% endif %}</p>
+          <p class="jcg-price__value">{{ s.soldPrice }}</p>
+          {%- endif %}
+          {%- if side %}<p class="jcg-side">{{ side }}</p>{% endif %}
+        </div>
+        {%- endif %}
+      </div>
+
+      <div class="jcg-foot">
+        <div class="jcg-agent">
+          <div class="jcg-agent__photo">
+            {%- if a.headshotUrl %}<img src="{{ a.headshotUrl }}" alt="{{ a.fullName }}">{% endif -%}
+          </div>
+          <div>
+            <p class="jcg-agent__name">{{ a.fullName }}</p>
+            <p class="jcg-agent__credential">{% if a.jobTitle %}{{ a.jobTitle }}{% else %}Realtor®{% endif %}{% if a.dre %} | DRE #{{ a.dre }}{% endif %}</p>
+            <div class="jcg-contact">
+            {%- if a.phone %}<p><img src="assets/icon-phone-gold.svg" alt="">{{ a.phone }}</p>{% endif %}
+            {%- if a.email %}<p><img src="assets/icon-email-gold.svg" alt="">{{ a.email }}</p>{% endif %}
+          </div>
+          </div>
+        </div>
+        <p class="jcg-cta"><b>{{ ctaHead }}</b><span>{{ ctaSub }}</span></p>
+      </div>
+
+      <div class="jcg-legal">
+        <img src="assets/equal-housing-white.png" alt="Equal Housing Opportunity">
+        <img src="assets/realtor-white.png" alt="REALTOR®">
+        {# Word for word from brand/legal-text.md (Flyers). #}
+        <p>Each office is Independently Owned &amp; Operated | Broker DRE# 01849354</p>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,449 @@
+/* ==========================================================================
+   Flyer / just-listed-gallery
+   8.5 x 11 in, 0.125 in bleed. Relentless palette only. Gold ground.
+
+   The idea: the photographs are the flyer. On a Relentless Gold page, a
+   bento gallery takes most of the sheet: the house large, two photos
+   stacked beside it, and a row of up to four beneath. The type is reduced
+   to what a buyer scans for: the title and price on one line, the address
+   and the three figures on the next, the features as a compact list, and
+   the agent on a dark band at the foot. There is no overview paragraph.
+
+   Up to seven photos. The gallery adapts to however many arrive (see
+   page.njk), and skips any gallery photo that is the hero again.
+
+   Units are pt. .jlg-sheet is trim + bleed (630 x 810), .jlg-trim is the
+   finished size (612 x 792) and everything is placed in trim coordinates.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Medium.otf") format("opentype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Bold.otf") format("opentype");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@page {
+  size: 8.75in 11.25in;
+  margin: 0;
+}
+
+.jlg {
+  /* Relentless palette */
+  --gold: #beaf87;
+  --gold-med: #ded7c3;
+  --gold-lt: #f8f7f2;
+  --white: #ffffff;
+  --grey: #252526;
+
+  --bleed: 9pt;
+  --gap: 6pt;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.jlg {
+  background: #d9d9d9;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+@media print {
+  body.jlg {
+    background: none;
+  }
+}
+
+/* :where() keeps the reset at single-class weight so element rules win. */
+.jlg :where(p, h1, h2, ul) {
+  margin: 0;
+  padding: 0;
+}
+
+.jlg ul {
+  list-style: none;
+}
+
+.jlg img {
+  display: block;
+}
+
+.jlg-sheet {
+  position: relative;
+  width: 630pt;
+  height: 810pt;
+  overflow: hidden;
+  background: var(--gold);
+  color: var(--grey);
+  font-family: "Oakes Grotesk", sans-serif;
+}
+
+.jlg-trim {
+  position: absolute;
+  inset: var(--bleed);
+}
+
+/* --------------------------------------------------------------------------
+   Header: logo and place; title and price on one line; address and figures
+   on the next.
+   -------------------------------------------------------------------------- */
+
+.jlg-top {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 30pt;
+  height: 25pt;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.jlg-logo {
+  height: 25pt;
+  width: auto;
+}
+
+.jlg-top__place {
+  font-weight: 700;
+  font-size: 7.5pt;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+.jlg-head {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 70pt;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20pt;
+}
+
+.jlg-title {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 56pt;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.jlg-title span {
+  color: var(--white);
+}
+
+.jlg-price {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.jlg-price__label {
+  font-weight: 700;
+  font-size: 7pt;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.jlg-price__value {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 30pt;
+  line-height: 1;
+}
+
+.jlg-sub {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 134pt;
+  padding: 8pt 0;
+  border-top: 1pt solid var(--grey);
+  border-bottom: 0.5pt solid rgba(37, 37, 38, 0.4);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16pt;
+}
+
+.jlg-address {
+  min-width: 0;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 11pt;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.jlg-address span {
+  font-family: "Oakes Grotesk", sans-serif;
+  font-weight: 400;
+  font-size: 9pt;
+}
+
+.jlg-figures {
+  flex-shrink: 0;
+  display: flex;
+  gap: 14pt;
+  font-weight: 700;
+  font-size: 6.5pt;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.jlg-figures b {
+  margin-right: 4pt;
+  font-family: "Typold", sans-serif;
+  font-size: 12pt;
+  letter-spacing: 0;
+}
+
+/* --------------------------------------------------------------------------
+   The gallery and the features: one column between the header and the
+   agent band. The gallery takes the height that is left.
+   -------------------------------------------------------------------------- */
+
+.jlg-main {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 174pt;
+  bottom: 120pt;
+  display: flex;
+  flex-direction: column;
+  gap: 12pt;
+}
+
+.jlg-gallery {
+  flex: 1 1 0;
+  min-height: 260pt;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.jlg-gallery__top {
+  flex: 2.1 1 0;
+  min-height: 0;
+  display: flex;
+  gap: var(--gap);
+}
+
+.jlg-gallery__hero {
+  flex: 1 1 0;
+}
+
+.jlg-gallery__side {
+  flex: 0 0 172pt;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.jlg-gallery__side > div {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.jlg-gallery__row {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  gap: var(--gap);
+}
+
+.jlg-gallery__row > div {
+  flex: 1 1 0;
+}
+
+.jlg-gallery div {
+  overflow: hidden;
+}
+
+.jlg-gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.jlg-gallery__hero img {
+  object-position: var(--hero-x, 50%) center;
+}
+
+.jlg-features {
+  flex: 0 0 auto;
+  columns: 3;
+  column-gap: 16pt;
+}
+
+.jlg-feature {
+  break-inside: avoid;
+  display: flex;
+  gap: 6pt;
+  padding: 2.5pt 0;
+  font-size: 8.25pt;
+  line-height: 1.3;
+}
+
+.jlg-feature::before {
+  content: "";
+  flex-shrink: 0;
+  width: 4pt;
+  height: 4pt;
+  margin-top: 3.6pt;
+  background: var(--grey);
+}
+
+/* --------------------------------------------------------------------------
+   The agent band: full bleed at the foot of the page.
+   -------------------------------------------------------------------------- */
+
+.jlg-band {
+  position: absolute;
+  left: calc(-1 * var(--bleed));
+  right: calc(-1 * var(--bleed));
+  top: 684pt;
+  bottom: calc(-1 * var(--bleed));
+  background: var(--grey);
+}
+
+.jlg-agent {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 696pt;
+  display: flex;
+  align-items: center;
+  gap: 14pt;
+  color: var(--gold-lt);
+}
+
+.jlg-agent__photo {
+  flex-shrink: 0;
+  width: 46pt;
+  height: 56pt;
+  overflow: hidden;
+  background: var(--gold-med);
+}
+
+.jlg-agent__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+}
+
+.jlg-agent__who {
+  min-width: 0;
+  max-width: 170pt;
+}
+
+.jlg-agent__name {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 13pt;
+  line-height: 1.12;
+  color: var(--gold);
+  text-wrap: balance;
+}
+
+.jlg-agent__credential {
+  margin-top: 1pt;
+  font-size: 7.5pt;
+  color: var(--gold-med);
+  white-space: nowrap;
+}
+
+.jlg-contact {
+  flex-shrink: 0;
+  padding-left: 14pt;
+  border-left: 0.75pt solid rgba(190, 175, 135, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 3pt;
+}
+
+.jlg-contact p {
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+  font-size: 8.5pt;
+  white-space: nowrap;
+}
+
+.jlg-contact img {
+  width: 10pt;
+  height: 10pt;
+}
+
+.jlg-cta {
+  flex-shrink: 0;
+  margin-left: auto;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.jlg-cta b {
+  display: block;
+  font-family: "Typold", sans-serif;
+  font-size: 10.5pt;
+  color: var(--white);
+}
+
+.jlg-cta span {
+  font-size: 8pt;
+  color: var(--gold-med);
+}
+
+.jlg-legal {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 762pt;
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+  color: var(--gold-med);
+}
+
+.jlg-legal img {
+  height: 11pt;
+  width: auto;
+}
+
+.jlg-legal p {
+  margin-left: 2pt;
+  font-size: 6pt;
+}

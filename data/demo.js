@@ -32,9 +32,28 @@ const DEMO_LISTING = {
   garageSpaces: "2",
   headline: "Modern Living, Designed in Warm Wood and Light",
   description: "Built in 2025, this 4-bedroom, 3.5-bath contemporary pairs cedar plank and charcoal finishes with floor-to-ceiling glass for a home that feels open, bright, and grounded. A chef’s kitchen with a large island flows into the open living and dining space, while upstairs the primary suite opens onto a private balcony with a walk-in closet and spa-style bath. A guest suite, flexible loft or office, smart home system, solar-ready roof, and attached 2-car garage complete 3,240 sq ft of thoughtfully designed living.",
+  // The Just Listed samples use a shorter description and a features list.
+  descriptionShort: "Cedar plank, charcoal and floor-to-ceiling glass make this 2025 contemporary feel open, bright and grounded. The kitchen flows straight into the living and dining space, and upstairs the primary suite opens onto a private balcony. A home designed for everyday life, with room to grow.",
+  features: [
+    "Built in 2025",
+    "Chef’s kitchen with oversized island",
+    "Floor-to-ceiling glass throughout",
+    "Primary suite with private balcony",
+    "Spa-style primary bath",
+    "Flexible loft or home office",
+    "Smart home system, solar-ready roof",
+    "Attached 2-car garage",
+  ],
+  sale: { soldPriceLabel: "Sold for", soldPrice: "$2,140,000", side: "seller" },
   hero: { url: "assets/demo/hero.webp", name: "hero.jpg" },
   gallery: [
     { url: "assets/demo/hero.webp", name: "exterior.jpg" },
+    { url: "assets/demo/kitchen.webp", name: "kitchen.png" },
+    { url: "assets/demo/living.webp", name: "living.png" },
+    { url: "assets/demo/bedroom.webp", name: "bedroom.png" },
+  ],
+  // For designs that skip a gallery photo matching the hero: interiors only.
+  interiors: [
     { url: "assets/demo/kitchen.webp", name: "kitchen.png" },
     { url: "assets/demo/living.webp", name: "living.png" },
     { url: "assets/demo/bedroom.webp", name: "bedroom.png" },

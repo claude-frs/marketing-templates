@@ -1,0 +1,548 @@
+/* ==========================================================================
+   Flyer / just-sold-rider
+   8.5 x 11 in, 0.125 in bleed. Relentless palette only.
+
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Bold%20Italic.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Typold Condensed";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Condensed%20Black.otf") format("opentype");
+  font-weight: 900;
+}
+
+   The idea: the sold sign, and everything on it. On a Relentless Gold
+   page, a dark signpost stands in a ground line, its arm across the top.
+   From the arm hangs the rider plate, "JUST SOLD!". Below it hangs the
+   sign itself, as real yard signs are made: the photo of the house, and
+   attached under it the agent's name strip (headshot, name, phone large).
+   From the foot of the sign hang four small rider plates, one per figure:
+   beds, baths, square feet, garage. The interiors, the address and the
+   sold price stand in a column beside the sign; "Congratulations to the
+   new owners!" sits on the ground line.
+
+   Units are pt. .jsr-sheet is trim + bleed (630 x 810), .jsr-trim is the
+   finished size (612 x 792) and everything is placed in trim coordinates.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Medium.otf") format("opentype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Bold.otf") format("opentype");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@page {
+  size: 8.75in 11.25in;
+  margin: 0;
+}
+
+.jsr {
+  /* Relentless palette */
+  --gold: #beaf87;
+  --gold-med: #ded7c3;
+  --gold-lt: #f8f7f2;
+  --white: #ffffff;
+  --grey-lt: #f4f4f6;
+  --grey-med: #c4c4c6;
+  --grey: #252526;
+  --grey-rgb: 37, 37, 38;
+
+  --bleed: 9pt;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.jsr {
+  background: #d9d9d9;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+@media print {
+  body.jsr {
+    background: none;
+  }
+}
+
+/* :where() keeps the reset at single-class weight so element rules win. */
+.jsr :where(p, h1, h2, ul) {
+  margin: 0;
+  padding: 0;
+}
+
+.jsr ul {
+  list-style: none;
+}
+
+.jsr img {
+  display: block;
+}
+
+.jsr-sheet {
+  position: relative;
+  width: 630pt;
+  height: 810pt;
+  overflow: hidden;
+  background: var(--gold);
+  font-family: "Oakes Grotesk", sans-serif;
+}
+
+.jsr-trim {
+  position: absolute;
+  inset: var(--bleed);
+}
+
+/* Shared small parts: legal line, contact lines, captions. */
+.jsr-legal {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 762pt;
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+}
+
+.jsr-legal img {
+  height: 11pt;
+  width: auto;
+}
+
+.jsr-legal p {
+  margin-left: 2pt;
+  font-size: 6pt;
+}
+
+.jsr-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 3pt;
+}
+
+.jsr-contact p {
+  display: flex;
+  align-items: center;
+  gap: 6pt;
+  font-size: 9pt;
+  white-space: nowrap;
+}
+
+.jsr-contact img {
+  width: 11pt;
+  height: 11pt;
+}
+
+.jsr-caption {
+  font-weight: 700;
+  font-size: 7pt;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.jsr-sheet {
+  color: var(--grey);
+}
+
+.jsr-logo {
+  position: absolute;
+  right: 30pt;
+  top: 30pt;
+  height: 25pt;
+  width: auto;
+}
+
+/* Post, from the top into the ground line at y 724. */
+.jsr-post {
+  position: absolute;
+  left: 30pt;
+  top: 28pt;
+  width: 14pt;
+  height: 700pt;
+  background: var(--grey);
+}
+
+.jsr-post::before {
+  content: "";
+  position: absolute;
+  left: -4pt;
+  top: -6pt;
+  width: 22pt;
+  height: 10pt;
+  background: var(--grey);
+}
+
+.jsr-arm {
+  position: absolute;
+  left: 30pt;
+  top: 90pt;
+  width: 410pt;
+  height: 12pt;
+  background: var(--grey);
+}
+
+.jsr-arm::after {
+  content: "";
+  position: absolute;
+  right: -6pt;
+  top: -2pt;
+  width: 10pt;
+  height: 16pt;
+  background: var(--grey);
+}
+
+.jsr-ground {
+  position: absolute;
+  left: calc(-1 * var(--bleed));
+  right: calc(-1 * var(--bleed));
+  top: 724pt;
+  height: 3pt;
+  background: var(--grey);
+}
+
+.jsr-chain {
+  position: absolute;
+  width: 0;
+  border-left: 1.5pt dotted var(--grey);
+}
+
+/* The rider plate. */
+.jsr-rider {
+  position: absolute;
+  left: 60pt;
+  top: 120pt;
+  width: 370pt;
+  height: 96pt;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14pt;
+  background: var(--grey);
+  box-shadow: inset 0 0 0 4pt var(--grey), inset 0 0 0 5.25pt var(--gold);
+}
+
+.jsr-rider__just {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 44pt;
+  line-height: 1;
+  color: var(--white);
+}
+
+.jsr-rider__sold {
+  font-family: "Typold Condensed", sans-serif;
+  font-weight: 900;
+  font-size: 80pt;
+  line-height: 0.8;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* The sign: photo plus the agent's name strip, one dark frame. */
+/* The sign, the street-name plate and the stat plates hang as one
+   column, so each follows the one above it. */
+.jsr-hang {
+  position: absolute;
+  left: 60pt;
+  top: 244pt;
+  width: 370pt;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.jsr-sign {
+  width: 100%;
+  height: 228pt;
+  padding: 9pt;
+  background: var(--grey);
+}
+
+.jsr-sign img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--hero-x, 50%) center;
+}
+
+/* The street-name plate, hung straight under the house on two short
+   chains: the address as a street sign. */
+.jsr-street {
+  position: relative;
+  margin-top: 14pt;
+  min-width: 300pt;
+  max-width: 100%;
+  padding: 9pt 22pt 8pt;
+  text-align: center;
+  background: var(--grey);
+  color: var(--white);
+  box-shadow: inset 0 0 0 3pt var(--grey), inset 0 0 0 4.25pt var(--white);
+}
+
+.jsr-street::before,
+.jsr-street::after {
+  content: "";
+  position: absolute;
+  top: -14pt;
+  height: 14pt;
+  border-left: 1.5pt dotted var(--grey);
+}
+
+.jsr-street::before {
+  left: 30pt;
+}
+
+.jsr-street::after {
+  right: 30pt;
+}
+
+.jsr-street__name {
+  font-family: "Typold Condensed", sans-serif;
+  font-weight: 900;
+  font-size: 22pt;
+  line-height: 1.05;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.jsr-street__city {
+  margin-top: 2pt;
+  font-weight: 700;
+  font-size: 7.5pt;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* Stat plates hanging from the street plate. */
+.jsr-plates {
+  margin-top: 16pt;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.jsr-plate {
+  position: relative;
+  width: 82pt;
+  padding: 7pt 0 6pt;
+  text-align: center;
+  background: var(--grey);
+  color: var(--gold-lt);
+  box-shadow: inset 0 0 0 3pt var(--grey), inset 0 0 0 4pt var(--gold);
+}
+
+.jsr-plate::before,
+.jsr-plate::after {
+  content: "";
+  position: absolute;
+  top: -16pt;
+  height: 16pt;
+  border-left: 1.5pt dotted var(--grey);
+}
+
+.jsr-plate::before {
+  left: 14pt;
+}
+
+.jsr-plate::after {
+  right: 14pt;
+}
+
+.jsr-plate b {
+  display: block;
+  font-family: "Typold Condensed", sans-serif;
+  font-weight: 900;
+  font-size: 22pt;
+  line-height: 1;
+  color: var(--gold);
+}
+
+.jsr-plate span {
+  font-weight: 700;
+  font-size: 6.5pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* The column beside the sign: interiors, the sale, congratulations. */
+.jsr-col {
+  position: absolute;
+  left: 446pt;
+  right: 30pt;
+  top: 244pt;
+  bottom: 160pt;
+  display: flex;
+  flex-direction: column;
+  gap: 8pt;
+}
+
+.jsr-col__photo {
+  flex: 0 0 74pt;
+  padding: 3pt;
+  background: var(--white);
+}
+
+.jsr-col__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.jsr-price {
+  margin-top: 8pt;
+  padding-top: 10pt;
+  border-top: 1pt solid var(--grey);
+}
+
+.jsr-price__caption {
+  color: var(--grey);
+}
+
+.jsr-price__value {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 19pt;
+  line-height: 1.05;
+  color: var(--white);
+}
+
+.jsr-side {
+  margin-top: 2pt;
+  font-size: 7.5pt;
+}
+
+.jsr-cheer {
+  margin-top: auto;
+}
+
+.jsr-cheer__word {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 15pt;
+  line-height: 1.05;
+  color: var(--white);
+}
+
+.jsr-cheer__to {
+  margin-top: 3pt;
+  font-weight: 700;
+  font-size: 7pt;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* The agent, below the sign, standing on the ground line (y 724). */
+.jsr-agent {
+  position: absolute;
+  left: 60pt;
+  right: 30pt;
+  bottom: calc(792pt - 714pt);
+  padding-top: 12pt;
+  border-top: 1pt solid var(--grey);
+  display: flex;
+  align-items: center;
+  gap: 14pt;
+}
+
+.jsr-agent__photo {
+  flex-shrink: 0;
+  width: 58pt;
+  height: 58pt;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--gold-med);
+  box-shadow: 0 0 0 2pt var(--gold), 0 0 0 3.25pt var(--grey);
+}
+
+.jsr-agent__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+}
+
+.jsr-agent__who {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.jsr-agent__ask {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 10pt;
+  color: var(--white);
+}
+
+.jsr-agent__name {
+  margin-top: 1pt;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 15pt;
+  line-height: 1.1;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.jsr-agent__credential {
+  font-size: 7.5pt;
+}
+
+.jsr-agent__reach {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.jsr-agent__phone {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 20pt;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.jsr-agent__more {
+  margin-top: 4pt;
+  font-size: 8pt;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.jsr-legal {
+  top: 742pt;
+}

@@ -1,0 +1,103 @@
+{#
+  Flyer / just-listed-ledger
+  Just Listed data shape: no dates; beds/baths/sqft plus listing.features,
+  a list of 3 to 10 short lines. See notes.md.
+
+  Photos: the hero is the large mosaic photo; gallery photos 2 to 4 are
+  stacked beside it. Gallery photo 1 (usually the exterior again) is not
+  used.
+
+  The description is not printed: the ledger and the features carry the
+  detail, and the headline is not used either, so the price leads.
+
+  Optional fields are guarded with {% if %}; never | default().
+#}
+{%- set l = flyer.listing -%}
+{%- set a = flyer.agentInfo -%}
+{%- set g = l.galleryImageUrls -%}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Just Listed · {{ l.street }}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="jll">
+  <div class="jll-sheet">
+    <div class="jll-trim">
+
+      <div class="jll-top">
+        <img class="jll-logo" src="assets/c21-masters-white.svg" alt="CENTURY 21 Masters">
+        <p class="jll-top__place">{{ l.city }}, {{ l.state }}</p>
+      </div>
+
+      <h1 class="jll-title">Just <span>Listed</span></h1>
+
+      <div class="jll-main">
+        <div class="jll-mosaic">
+          <div class="jll-mosaic__hero"><img src="{{ l.heroImageUrl }}" alt=""{% if l.heroPositionX %} style="--hero-x: {{ l.heroPositionX }}%"{% endif %}></div>
+          <div><img src="{{ g[1] }}" alt=""></div>
+          <div><img src="{{ g[2] }}" alt=""></div>
+          <div><img src="{{ g[3] }}" alt=""></div>
+        </div>
+
+        <div class="jll-price">
+          <div>
+            {%- if l.price %}
+            <p class="jll-price__label">{% if l.priceLabel %}{{ l.priceLabel }}{% else %}Offered at{% endif %}</p>
+            <p class="jll-price__value">{{ l.price }}</p>
+            {%- endif %}
+          </div>
+          <p class="jll-address">{{ l.street }}<span>{{ l.city }}, {{ l.state }} {{ l.zip }}</span></p>
+        </div>
+
+        <div class="jll-book">
+          <div class="jll-ledger">
+            <p class="jll-book__caption">The details</p>
+            {%- if l.beds %}<p class="jll-entry"><span>{% if l.beds == "1" %}Bedroom{% else %}Bedrooms{% endif %}</span><i></i><b>{{ l.beds }}</b></p>{% endif %}
+            {%- if l.baths %}<p class="jll-entry"><span>{% if l.baths == "1" %}Bathroom{% else %}Bathrooms{% endif %}</span><i></i><b>{{ l.baths }}</b></p>{% endif %}
+            {%- if l.sqft %}<p class="jll-entry"><span>Square feet</span><i></i><b>{{ l.sqft }}</b></p>{% endif %}
+          </div>
+          {%- if l.features and l.features.length %}
+          <div class="jll-features">
+            <p class="jll-book__caption">The highlights</p>
+            <ul>
+              {%- for item in l.features %}
+              <li class="jll-feature">{{ item }}</li>
+              {%- endfor %}
+            </ul>
+          </div>
+          {%- endif %}
+        </div>
+      </div>
+
+      <div class="jll-cutout">
+        {%- if a.headshotCutoutUrl %}<img src="{{ a.headshotCutoutUrl }}" alt="{{ a.fullName }}">{% endif -%}
+      </div>
+
+      <div class="jll-agent">
+        <div>
+          <p class="jll-agent__caption">Presented by</p>
+          <p class="jll-agent__name">{{ a.fullName }}</p>
+          <p class="jll-agent__credential">{% if a.jobTitle %}{{ a.jobTitle }}{% else %}Realtor®{% endif %}{% if a.dre %} | DRE #{{ a.dre }}{% endif %}</p>
+        </div>
+        <div class="jll-agent__right">
+          <div class="jll-contact">
+            {%- if a.phone %}<p><img src="assets/icon-phone-gold.svg" alt="">{{ a.phone }}</p>{% endif %}
+            {%- if a.email %}<p><img src="assets/icon-email-gold.svg" alt="">{{ a.email }}</p>{% endif %}
+          </div>
+          <p class="jll-cta"><b>{% if flyer.cta.heading %}{{ flyer.cta.heading }}{% else %}Want to see it?{% endif %}</b>{% if flyer.cta.subline %}{{ flyer.cta.subline }}{% else %}Call me for a private tour.{% endif %}</p>
+        </div>
+      </div>
+
+      <div class="jll-legal">
+        <img src="assets/equal-housing-white.png" alt="Equal Housing Opportunity">
+        <img src="assets/realtor-white.png" alt="REALTOR®">
+        {# Word for word from brand/legal-text.md (Flyers). #}
+        <p>Each office is Independently Owned &amp; Operated | Broker DRE# 01849354</p>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,453 @@
+/* ==========================================================================
+   Flyer / just-listed-angle
+   8.5 x 11 in, 0.125 in bleed. Relentless palette only. Photo over dark.
+
+   The idea: one decisive cut. The house runs full bleed across the top of
+   the page, its lower edge cut by a single diagonal that falls from right
+   to left, with a band of Relentless Gold following the cut. Below it, on
+   light grey, "JUST LISTED" and the price are the largest things on the
+   page, set flush left under the low side of the cut, with the four
+   figures under them. The photos carry the rest: up to three interiors
+   stacked on the right under the high side of the cut, and up to two more
+   in a row on the left.
+
+   Nothing is rotated: only the photo's edge is angled.
+
+   Units are pt. .jla-sheet is trim + bleed (630 x 810), .jla-trim is the
+   finished size (612 x 792) and everything is placed in trim coordinates.
+   The cut runs from y 360 at the left bleed edge to y 270 at the right,
+   in sheet coordinates.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Medium.otf") format("opentype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Bold.otf") format("opentype");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@page {
+  size: 8.75in 11.25in;
+  margin: 0;
+}
+
+.jla {
+  /* Relentless palette */
+  --gold: #beaf87;
+  --gold-med: #ded7c3;
+  --gold-lt: #f8f7f2;
+  --white: #ffffff;
+  --grey-lt: #f4f4f6;
+  --grey-med: #c4c4c6;
+  --grey: #252526;
+  --grey-rgb: 37, 37, 38;
+
+  --bleed: 9pt;
+  --title: 54pt;
+}
+
+.jla--price-long {
+  --title: 49pt;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.jla {
+  background: #d9d9d9;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+@media print {
+  body.jla {
+    background: none;
+  }
+}
+
+/* :where() keeps the reset at single-class weight so element rules win. */
+.jla :where(p, h1, h2, ul) {
+  margin: 0;
+  padding: 0;
+}
+
+.jla ul {
+  list-style: none;
+}
+
+.jla img {
+  display: block;
+}
+
+.jla-sheet {
+  position: relative;
+  width: 630pt;
+  height: 810pt;
+  overflow: hidden;
+  background: var(--grey-lt);
+  color: var(--grey);
+  font-family: "Oakes Grotesk", sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+   The cut: the gold layer is the same shape as the photo, 16pt lower, so
+   it shows as a band along the diagonal. Both sit on the sheet (bleed
+   coordinates), under the trim layer.
+   -------------------------------------------------------------------------- */
+
+.jla-gold,
+.jla-hero {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 630pt;
+  height: 390pt;
+}
+
+.jla-gold {
+  background: var(--gold);
+  clip-path: polygon(0 0, 100% 0, 100% 286pt, 0 376pt);
+}
+
+.jla-hero {
+  clip-path: polygon(0 0, 100% 0, 100% 270pt, 0 360pt);
+}
+
+.jla-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--hero-x, 50%) 40%;
+}
+
+/* Shade the top for the wordmark. */
+.jla-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom,
+    rgba(var(--grey-rgb), 0.6) 0%,
+    rgba(var(--grey-rgb), 0) 26%);
+}
+
+.jla-trim {
+  position: absolute;
+  inset: var(--bleed);
+}
+
+.jla-top {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 30pt;
+  height: 25pt;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.jla-logo {
+  height: 25pt;
+  width: auto;
+}
+
+.jla-top__place {
+  font-weight: 700;
+  font-size: 7.5pt;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+/* --------------------------------------------------------------------------
+   Left: the statement, the figures, more photos
+   -------------------------------------------------------------------------- */
+
+.jla-left {
+  position: absolute;
+  left: 30pt;
+  width: 396pt;
+  top: 380pt;
+  bottom: 104pt;
+  display: flex;
+  flex-direction: column;
+}
+
+.jla-title {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: var(--title);
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--grey);
+  white-space: nowrap;
+}
+
+.jla-title span {
+  color: var(--gold);
+}
+
+.jla-price {
+  margin-top: 12pt;
+  display: flex;
+  align-items: flex-end;
+  gap: 12pt;
+}
+
+.jla-price__value {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: var(--title);
+  line-height: 0.95;
+  color: var(--grey);
+  white-space: nowrap;
+}
+
+.jla-price__label {
+  padding-bottom: 5pt;
+  font-weight: 700;
+  font-size: 7pt;
+  line-height: 1.4;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--grey);
+  white-space: nowrap;
+}
+
+.jla-line {
+  margin-top: 14pt;
+  padding: 8pt 0;
+  border-top: 1pt solid var(--gold);
+  border-bottom: 0.5pt solid var(--grey-med);
+}
+
+.jla-address {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 10.5pt;
+  line-height: 1.25;
+  color: var(--grey);
+}
+
+.jla-address span {
+  font-family: "Oakes Grotesk", sans-serif;
+  font-weight: 400;
+  font-size: 9pt;
+}
+
+/* The four figures, divided by gold rules. */
+.jla-figures {
+  margin-top: 8pt;
+  display: flex;
+  font-weight: 700;
+  font-size: 6.5pt;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.jla-figures span {
+  display: flex;
+  flex-direction: column;
+  padding-right: 14pt;
+}
+
+.jla-figures span + span {
+  padding-left: 14pt;
+  border-left: 0.75pt solid var(--gold);
+}
+
+.jla-figures b {
+  margin-bottom: 3pt;
+  font-family: "Typold", sans-serif;
+  font-size: 20pt;
+  line-height: 1.05;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* --------------------------------------------------------------------------
+   Right: the interiors, stacked under the high side of the cut
+   -------------------------------------------------------------------------- */
+
+.jla-inside {
+  position: absolute;
+  left: 448pt;
+  right: 30pt;
+  top: 322pt;
+  bottom: 104pt;
+  display: flex;
+  flex-direction: column;
+  gap: 8pt;
+}
+
+.jla-inside div {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.jla-inside img,
+.jla-row img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* A fine keyline, so a pale photo keeps its edge on the light ground. */
+.jla-inside div,
+.jla-row div {
+  outline: 0.75pt solid var(--grey);
+  outline-offset: -0.75pt;
+}
+
+/* Up to two more photos under the figures, taking the height that is
+   left in the column. */
+.jla-row {
+  flex: 1 1 0;
+  min-height: 70pt;
+  margin-top: 14pt;
+  display: flex;
+  gap: 8pt;
+}
+
+.jla-row div {
+  flex: 1 1 0;
+}
+
+/* --------------------------------------------------------------------------
+   Agent row and legal
+   -------------------------------------------------------------------------- */
+
+.jla-footer {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 700pt;
+  padding-top: 10pt;
+  border-top: 1pt solid var(--grey);
+  display: flex;
+  align-items: center;
+  gap: 14pt;
+}
+
+.jla-agent__photo {
+  flex-shrink: 0;
+  width: 46pt;
+  height: 46pt;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1.5pt solid var(--gold);
+  background: var(--gold-med);
+}
+
+.jla-agent__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+}
+
+.jla-agent {
+  min-width: 0;
+  max-width: 160pt;
+}
+
+.jla-agent__name {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 13pt;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.jla-agent__credential {
+  font-size: 7.5pt;
+  white-space: nowrap;
+}
+
+.jla-contact {
+  flex-shrink: 0;
+  padding-left: 14pt;
+  border-left: 0.75pt solid var(--gold);
+  display: flex;
+  flex-direction: column;
+  gap: 3pt;
+}
+
+.jla-contact p {
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+  font-size: 8.5pt;
+  white-space: nowrap;
+}
+
+.jla-contact img {
+  width: 10pt;
+  height: 10pt;
+}
+
+.jla-cta {
+  flex-shrink: 0;
+  margin-left: auto;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.jla-cta b {
+  display: block;
+  font-family: "Typold", sans-serif;
+  font-size: 10.5pt;
+}
+
+.jla-cta span {
+  font-size: 8pt;
+}
+
+.jla-legal {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 762pt;
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+}
+
+.jla-legal img {
+  height: 11pt;
+  width: auto;
+}
+
+.jla-legal p {
+  margin-left: 2pt;
+  font-size: 6pt;
+}

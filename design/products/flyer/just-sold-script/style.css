@@ -1,0 +1,571 @@
+/* ==========================================================================
+   Flyer / just-sold-script
+   8.5 x 11 in, 0.125 in bleed. Relentless palette only.
+
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Bold%20Italic.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Typold Condensed";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Condensed%20Black.otf") format("opentype");
+  font-weight: 900;
+}
+
+   The idea: two voices and a diagonal. A white panel on the left meets
+   the photograph along a diagonal edged in gold. The title is two voices
+   laid over each other: "JUST" in heavy condensed capitals, and "Sold!"
+   in flowing gold italic lapping across its foot. A dark ribbon carries
+   the congratulations. The facts sit beside icons, three interiors in
+   white mounts straddle the photo's lower edge, and a split footer (gold
+   on the left, white on the right) holds the agent and three ways to
+   reach them.
+
+   Units are pt. .jsx-sheet is trim + bleed (630 x 810), .jsx-trim is the
+   finished size (612 x 792) and everything is placed in trim coordinates.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Medium.otf") format("opentype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Bold.otf") format("opentype");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@page {
+  size: 8.75in 11.25in;
+  margin: 0;
+}
+
+.jsx {
+  /* Relentless palette */
+  --gold: #beaf87;
+  --gold-med: #ded7c3;
+  --gold-lt: #f8f7f2;
+  --white: #ffffff;
+  --grey-lt: #f4f4f6;
+  --grey-med: #c4c4c6;
+  --grey: #252526;
+  --grey-rgb: 37, 37, 38;
+
+  --bleed: 9pt;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.jsx {
+  background: #d9d9d9;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+@media print {
+  body.jsx {
+    background: none;
+  }
+}
+
+/* :where() keeps the reset at single-class weight so element rules win. */
+.jsx :where(p, h1, h2, ul) {
+  margin: 0;
+  padding: 0;
+}
+
+.jsx ul {
+  list-style: none;
+}
+
+.jsx img {
+  display: block;
+}
+
+.jsx-sheet {
+  position: relative;
+  width: 630pt;
+  height: 810pt;
+  overflow: hidden;
+  background: var(--white);
+  font-family: "Oakes Grotesk", sans-serif;
+}
+
+.jsx-trim {
+  position: absolute;
+  inset: var(--bleed);
+}
+
+/* Shared small parts: legal line, contact lines, captions. */
+.jsx-legal {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 762pt;
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+}
+
+.jsx-legal img {
+  height: 11pt;
+  width: auto;
+}
+
+.jsx-legal p {
+  margin-left: 2pt;
+  font-size: 6pt;
+}
+
+.jsx-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 3pt;
+}
+
+.jsx-contact p {
+  display: flex;
+  align-items: center;
+  gap: 6pt;
+  font-size: 9pt;
+  white-space: nowrap;
+}
+
+.jsx-contact img {
+  width: 11pt;
+  height: 11pt;
+}
+
+.jsx-caption {
+  font-weight: 700;
+  font-size: 7pt;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.jsx-sheet {
+  color: var(--grey);
+}
+
+/* The diagonal: gold first, the photo 7pt in front of it. Sheet
+   coordinates: the edge runs from x 348 at the top to x 248 at y 488. */
+.jsx-gold,
+.jsx-hero {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 630pt;
+  height: 488pt;
+}
+
+.jsx-gold {
+  background: var(--gold);
+  clip-path: polygon(340pt 0, 100% 0, 100% 100%, 240pt 100%);
+}
+
+.jsx-hero {
+  clip-path: polygon(348pt 0, 100% 0, 100% 100%, 248pt 100%);
+}
+
+.jsx-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--hero-x, 62%) center;
+}
+
+.jsx-logo {
+  position: absolute;
+  left: 30pt;
+  top: 30pt;
+  height: 25pt;
+  width: auto;
+}
+
+/* The two-voice title. */
+.jsx-just {
+  position: absolute;
+  left: 26pt;
+  top: 70pt;
+  font-family: "Typold Condensed", sans-serif;
+  font-weight: 900;
+  font-size: 124pt;
+  line-height: 0.82;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.jsx-sold {
+  position: absolute;
+  left: 58pt;
+  top: 150pt;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 84pt;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--gold);
+  /* A thin white keyline separates the gold from the black behind it. */
+  -webkit-text-stroke: 3pt var(--white);
+  paint-order: stroke fill;
+}
+
+/* The ribbon: from the left bleed to the diagonal. */
+.jsx-ribbon {
+  position: absolute;
+  left: calc(-1 * var(--bleed));
+  top: 296pt;
+  width: calc(290pt + var(--bleed));
+  height: 30pt;
+  display: flex;
+  align-items: center;
+  padding-left: calc(30pt + var(--bleed));
+  background: var(--grey);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 6pt) 100%, 0 100%);
+  font-weight: 700;
+  font-size: 9.5pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--white);
+  white-space: nowrap;
+}
+
+.jsx-facts {
+  position: absolute;
+  left: 30pt;
+  width: 236pt;
+  top: 344pt;
+}
+
+.jsx-row {
+  display: flex;
+  align-items: center;
+  gap: 10pt;
+  padding: 8pt 0;
+  border-bottom: 0.75pt dotted var(--gold);
+}
+
+.jsx-row img {
+  width: 22pt;
+  height: 22pt;
+}
+
+.jsx-dollar {
+  flex-shrink: 0;
+  width: 28pt;
+  height: 28pt;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--grey);
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 14pt;
+  color: var(--white);
+}
+
+.jsx-address {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 13pt;
+  line-height: 1.2;
+}
+
+.jsx-address span {
+  display: block;
+  font-family: "Oakes Grotesk", sans-serif;
+  font-weight: 400;
+  font-size: 10pt;
+}
+
+.jsx-price__caption {
+  color: var(--grey);
+}
+
+.jsx-price__value {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 26pt;
+  line-height: 1.05;
+  color: var(--gold);
+}
+
+.jsx-side {
+  font-size: 8pt;
+}
+
+.jsx-facts .jsx-stats {
+  margin-top: 12pt;
+}
+
+.jsx-stats {
+  display: flex;
+  gap: 0;
+}
+
+.jsx-stat {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.jsx-stat + .jsx-stat {
+  border-left: 0.75pt solid var(--gold);
+}
+
+.jsx-stat i {
+  width: 34pt;
+  height: 34pt;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--grey);
+}
+
+.jsx-stat i img {
+  width: 18pt;
+  height: 18pt;
+}
+
+.jsx-stat b {
+  margin-top: 5pt;
+  font-family: "Typold", sans-serif;
+  font-size: 15pt;
+  line-height: 1;
+  color: var(--grey);
+}
+
+.jsx-stat span {
+  margin-top: 2pt;
+  font-weight: 700;
+  font-size: 6.5pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+
+/* Interiors straddling the photo's lower edge (y 479 in trim). */
+.jsx-inside {
+  position: absolute;
+  left: 288pt;
+  right: 30pt;
+  top: 432pt;
+  height: 98pt;
+  display: flex;
+  gap: 8pt;
+}
+
+.jsx-inside div {
+  flex: 1 1 0;
+  padding: 4pt;
+  background: var(--white);
+  box-shadow: 0 2pt 0 var(--grey-med);
+}
+
+.jsx-inside img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Congratulations and the invitation, under the interiors. */
+.jsx-cheer {
+  position: absolute;
+  left: 288pt;
+  right: 30pt;
+  top: 548pt;
+  text-align: center;
+}
+
+.jsx-cheer__word {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10pt;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 30pt;
+  line-height: 1;
+  color: var(--gold);
+}
+
+.jsx-cheer__word::before,
+.jsx-cheer__word::after {
+  content: "";
+  width: 16pt;
+  height: 12pt;
+  background:
+    linear-gradient(var(--gold), var(--gold)) center / 100% 1.25pt no-repeat,
+    linear-gradient(var(--gold), var(--gold)) center top / 1.25pt 4pt no-repeat;
+}
+
+.jsx-cheer__to {
+  margin-top: 4pt;
+  font-weight: 700;
+  font-size: 9pt;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.jsx-cheer__ask {
+  margin-top: 10pt;
+  font-size: 10pt;
+}
+
+.jsx-cheer__ask b {
+  display: block;
+  font-family: "Typold", sans-serif;
+  font-size: 12.5pt;
+}
+
+/* The split footer. */
+.jsx-foot-gold {
+  position: absolute;
+  left: calc(-1 * var(--bleed));
+  width: calc(272pt + var(--bleed));
+  top: 664pt;
+  bottom: calc(-1 * var(--bleed));
+  background: var(--gold);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 14pt) 100%, 0 100%);
+}
+
+.jsx-foot-line {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 664pt;
+  border-top: 1pt solid var(--gold);
+}
+
+.jsx-agent {
+  position: absolute;
+  left: 30pt;
+  width: 224pt;
+  top: 678pt;
+  display: flex;
+  align-items: center;
+  gap: 10pt;
+}
+
+.jsx-agent__photo {
+  flex-shrink: 0;
+  width: 52pt;
+  height: 52pt;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--gold-med);
+  box-shadow: 0 0 0 2.5pt var(--white);
+}
+
+.jsx-agent__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+}
+
+.jsx-agent__name {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 13pt;
+  line-height: 1.1;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.jsx-agent__credential {
+  font-size: 7.5pt;
+}
+
+.jsx-reach {
+  position: absolute;
+  left: 284pt;
+  right: 30pt;
+  top: 680pt;
+}
+
+.jsx-reach {
+  display: flex;
+  justify-content: space-around;
+  gap: 8pt;
+}
+
+.jsx-reach li {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.jsx-reach li + li {
+  border-left: 0.75pt solid var(--gold);
+}
+
+.jsx-reach i {
+  width: 28pt;
+  height: 28pt;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--grey);
+}
+
+.jsx-reach i img {
+  width: 14pt;
+  height: 14pt;
+}
+
+.jsx-reach b {
+  margin-top: 5pt;
+  max-width: 100%;
+  font-family: "Oakes Grotesk", sans-serif;
+  font-weight: 700;
+  font-size: 7.75pt;
+  color: var(--grey);
+}
+
+.jsx-reach span {
+  font-size: 7pt;
+  color: var(--grey);
+}
+
+.jsx-legal {
+  top: 764pt;
+}

@@ -1,0 +1,370 @@
+/* ==========================================================================
+   Flyer / just-sold-keys
+   8.5 x 11 in, 0.125 in bleed. Relentless palette only.
+
+   The idea: the keys are handed over. The moment a sale becomes real. On
+   dark, with the house faintly behind, the agent, cut out with no
+   background, stands on the right holding out the keys. On the left,
+   "Sold." in large gold with a white full stop, then "The keys are
+   handed over." and a line of congratulations to the new owners. The
+   details and the invitation follow down the left.
+
+   Units are pt. .jky-sheet is trim + bleed (630 x 810), .jky-trim is the
+   finished size (612 x 792) and everything is placed in trim coordinates.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Medium.otf") format("opentype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Bold.otf") format("opentype");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@page {
+  size: 8.75in 11.25in;
+  margin: 0;
+}
+
+.jky {
+  /* Relentless palette */
+  --gold: #beaf87;
+  --gold-med: #ded7c3;
+  --gold-lt: #f8f7f2;
+  --white: #ffffff;
+  --grey-lt: #f4f4f6;
+  --grey-med: #c4c4c6;
+  --grey: #252526;
+  --grey-rgb: 37, 37, 38;
+
+  --bleed: 9pt;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.jky {
+  background: #d9d9d9;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+@media print {
+  body.jky {
+    background: none;
+  }
+}
+
+/* :where() keeps the reset at single-class weight so element rules win. */
+.jky :where(p, h1, h2, ul) {
+  margin: 0;
+  padding: 0;
+}
+
+.jky ul {
+  list-style: none;
+}
+
+.jky img {
+  display: block;
+}
+
+.jky-sheet {
+  position: relative;
+  width: 630pt;
+  height: 810pt;
+  overflow: hidden;
+  background: var(--grey);
+  font-family: "Oakes Grotesk", sans-serif;
+}
+
+.jky-trim {
+  position: absolute;
+  inset: var(--bleed);
+}
+
+/* Shared small parts: legal line, contact lines, captions. */
+.jky-legal {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 762pt;
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+}
+
+.jky-legal img {
+  height: 11pt;
+  width: auto;
+}
+
+.jky-legal p {
+  margin-left: 2pt;
+  font-size: 6pt;
+}
+
+.jky-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 3pt;
+}
+
+.jky-contact p {
+  display: flex;
+  align-items: center;
+  gap: 6pt;
+  font-size: 9pt;
+  white-space: nowrap;
+}
+
+.jky-contact img {
+  width: 11pt;
+  height: 11pt;
+}
+
+.jky-caption {
+  font-weight: 700;
+  font-size: 7pt;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.jky-sheet {
+  color: var(--gold-lt);
+}
+
+/* The house, faint, full bleed. */
+.jky-hero {
+  position: absolute;
+  inset: 0;
+  opacity: 0.2;
+}
+
+.jky-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--hero-x, 50%) center;
+}
+
+.jky-logo {
+  position: absolute;
+  left: 30pt;
+  top: 30pt;
+  height: 25pt;
+  width: auto;
+}
+
+/* The agent: right half, cut by the bottom edge. Nothing else is placed
+   right of x 300 below y 230. */
+.jky-cutout {
+  position: absolute;
+  left: 300pt;
+  right: calc(-1 * var(--bleed));
+  bottom: calc(-1 * var(--bleed));
+  height: calc(560pt + var(--bleed));
+  overflow: hidden;
+}
+
+.jky-cutout img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+.jky-sold {
+  position: absolute;
+  left: 24pt;
+  top: 74pt;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 150pt;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+.jky-sold span {
+  color: var(--white);
+}
+
+.jky-col {
+  position: absolute;
+  left: 30pt;
+  width: 262pt;
+  top: 236pt;
+  bottom: 40pt;
+  display: flex;
+  flex-direction: column;
+}
+
+.jky-headline {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 28pt;
+  line-height: 1.08;
+  color: var(--white);
+}
+
+.jky-message {
+  margin-top: 10pt;
+  font-size: 10.5pt;
+  line-height: 1.45;
+  color: var(--gold-med);
+}
+
+.jky-sale {
+  margin-top: 22pt;
+  padding-top: 12pt;
+  border-top: 0.75pt solid rgba(190, 175, 135, 0.5);
+}
+
+.jky-price__caption {
+  color: var(--gold);
+}
+
+.jky-price__value {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 26pt;
+  line-height: 1.05;
+  color: var(--white);
+}
+
+.jky-side {
+  margin-top: 2pt;
+  font-size: 8pt;
+  color: var(--gold-med);
+}
+
+.jky-address {
+  margin-top: 10pt;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 12pt;
+  line-height: 1.2;
+  color: var(--white);
+  text-wrap: balance;
+}
+
+.jky-address span {
+  display: block;
+  font-family: "Oakes Grotesk", sans-serif;
+  font-weight: 400;
+  font-size: 9pt;
+  color: var(--gold-med);
+}
+
+.jky-sale .jky-figures {
+  margin-top: 6pt;
+}
+
+.jky-figures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4pt 10pt;
+  font-weight: 700;
+  font-size: 6.5pt;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-med);
+}
+
+.jky-figures b {
+  margin-right: 4pt;
+  font-family: "Typold", sans-serif;
+  font-size: 11pt;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--white);
+}
+
+.jky-cta {
+  margin-top: auto;
+}
+
+.jky-cta b {
+  display: block;
+  font-family: "Typold", sans-serif;
+  font-size: 17pt;
+  color: var(--white);
+}
+
+.jky-cta span {
+  font-size: 9pt;
+  color: var(--gold-med);
+}
+
+.jky-col .jky-agent {
+  margin-top: 12pt;
+}
+
+.jky-agent {
+  display: flex;
+  align-items: center;
+  gap: 12pt;
+}
+
+.jky-agent__name {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 13pt;
+  line-height: 1.12;
+  color: var(--gold);
+  text-wrap: balance;
+}
+
+.jky-agent__credential {
+  font-size: 7.5pt;
+  color: var(--gold-med);
+  white-space: nowrap;
+}
+
+.jky-agent .jky-contact {
+  margin-top: 4pt;
+  gap: 2pt;
+}
+
+.jky-agent .jky-contact p {
+  font-size: 8pt;
+}
+
+.jky-legal {
+  right: auto;
+  width: 262pt;
+  color: var(--gold-med);
+}
+
+.jky-legal p {
+  font-size: 5.6pt;
+}

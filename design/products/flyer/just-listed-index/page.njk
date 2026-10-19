@@ -1,0 +1,107 @@
+{#
+  Flyer / just-listed-index
+  Just Listed data shape: no dates; beds/baths/sqft plus listing.features,
+  a list of 3 to 10 short lines. See notes.md.
+
+  Photos: the hero, then gallery photos 2 to 4 in a row under it. Gallery
+  photo 1 (usually the exterior again) is not used.
+
+  Optional fields are guarded with {% if %}; never | default().
+#}
+{%- set l = flyer.listing -%}
+{%- set a = flyer.agentInfo -%}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Just Listed · {{ l.street }}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="jli">
+  <div class="jli-sheet">
+    <div class="jli-trim">
+
+      <h1 class="jli-title">Just <span>Listed</span></h1>
+      <div class="jli-hairline"></div>
+
+      <div class="jli-top">
+        <img class="jli-logo" src="assets/c21-masters-black.svg" alt="CENTURY 21 Masters">
+        <p class="jli-top__place">{{ l.city }}, {{ l.state }}</p>
+      </div>
+
+      <div class="jli-main">
+      <div class="jli-hero">
+        <img src="{{ l.heroImageUrl }}" alt=""{% if l.heroPositionX %} style="--hero-x: {{ l.heroPositionX }}%"{% endif %}>
+      </div>
+
+      <div class="jli-inside">
+        {%- for src in l.galleryImageUrls %}{% if loop.index > 1 %}
+        <div><img src="{{ src }}" alt=""></div>
+        {%- endif %}{% endfor %}
+      </div>
+
+      <div class="jli-body">
+        <div class="jli-key">
+          <div>
+            {%- if l.price %}
+            <p class="jli-price__label">{% if l.priceLabel %}{{ l.priceLabel }}{% else %}Offered at{% endif %}</p>
+            <p class="jli-price__value">{{ l.price }}</p>
+            {%- endif %}
+            <p class="jli-address">{{ l.street }}<span>{{ l.city }}, {{ l.state }} {{ l.zip }}</span></p>
+          </div>
+          <ul class="jli-figures">
+            {%- if l.beds %}<li class="jli-figure"><b>{{ l.beds }}</b><span>{% if l.beds == "1" %}Bed{% else %}Beds{% endif %}</span></li>{% endif %}
+            {%- if l.baths %}<li class="jli-figure"><b>{{ l.baths }}</b><span>{% if l.baths == "1" %}Bath{% else %}Baths{% endif %}</span></li>{% endif %}
+            {%- if l.sqft %}<li class="jli-figure"><b>{{ l.sqft }}</b><span>Sq Ft</span></li>{% endif %}
+          </ul>
+        </div>
+
+        {%- if l.features and l.features.length %}
+        <ol class="jli-features">
+          {%- for item in l.features %}
+          <li class="jli-feature"><b>{% if loop.index < 10 %}0{% endif %}{{ loop.index }}</b><span>{{ item }}</span></li>
+          {%- endfor %}
+        </ol>
+        {%- endif %}
+
+        <div class="jli-story">
+          {%- if l.headline %}
+          <h2 class="jli-story__headline">{{ l.headline }}</h2>
+          {%- endif %}
+          {%- if l.description %}
+          <p class="jli-story__body">{{ l.description }}</p>
+          {%- endif %}
+        </div>
+      </div>
+
+      </div>
+
+      <footer class="jli-footer">
+        <div class="jli-agent__photo">
+          {%- if a.headshotUrl %}<img src="{{ a.headshotUrl }}" alt="{{ a.fullName }}">{% endif -%}
+        </div>
+        <div class="jli-agent">
+          <p class="jli-agent__name">{{ a.fullName }}</p>
+          <p class="jli-agent__credential">{% if a.jobTitle %}{{ a.jobTitle }}{% else %}Realtor®{% endif %}{% if a.dre %} | DRE #{{ a.dre }}{% endif %}</p>
+        </div>
+        <div class="jli-contact">
+          {%- if a.phone %}<p><img src="assets/icon-phone.svg" alt="">{{ a.phone }}</p>{% endif %}
+          {%- if a.email %}<p><img src="assets/icon-email.svg" alt="">{{ a.email }}</p>{% endif %}
+        </div>
+        <div class="jli-cta">
+          <p class="jli-cta__heading">{% if flyer.cta.heading %}{{ flyer.cta.heading }}{% else %}Want to see it?{% endif %}</p>
+          <p class="jli-cta__sub">{% if flyer.cta.subline %}{{ flyer.cta.subline }}{% else %}Call me for a private tour.{% endif %}</p>
+        </div>
+      </footer>
+
+      <div class="jli-legal">
+        <img src="assets/equal-housing-black.png" alt="Equal Housing Opportunity">
+        <img src="assets/realtor-black.png" alt="REALTOR®">
+        {# Word for word from brand/legal-text.md (Flyers). #}
+        <p>Each office is Independently Owned &amp; Operated | Broker DRE# 01849354</p>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

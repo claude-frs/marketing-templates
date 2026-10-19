@@ -508,6 +508,7 @@ body.is-order { overflow: hidden; }
   color: var(--gold);
 }
 .group__note { margin: 0.25rem 0 0.9rem; font-size: 0.86rem; color: var(--soft); }
+.group > .field__hint { margin-bottom: 1.1rem; }
 
 .field { position: relative; margin-bottom: 1rem; min-width: 0; }
 .field__label {
@@ -552,6 +553,41 @@ body.is-order { overflow: hidden; }
 .row--price { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); }
 .row--stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .row--stats .field { margin-bottom: 0; }
+.row--stats3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.row--stats3 .field { margin-bottom: 0.25rem; }
+
+.field select {
+  display: block;
+  width: 100%;
+  min-height: 2.9rem;
+  padding: 0.7rem 2.5rem 0.7rem 0.9rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 0.6rem;
+  background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6' fill='none' stroke='%23beaf87' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") right 0.85rem center / 1.1rem no-repeat;
+  color: var(--white);
+  font-size: 1rem;
+  appearance: none;
+  cursor: pointer;
+}
+.field select:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(190, 175, 135, 0.2); }
+.field select[aria-invalid] { border-color: var(--gold-med); }
+
+/* Features: a numbered list of short lines */
+.feature { display: grid; grid-template-columns: 2rem minmax(0, 1fr) auto; align-items: center; gap: 0.5rem; margin-bottom: 0.55rem; }
+.feature__n { font: 500 0.8rem/1 var(--display); color: var(--gold); letter-spacing: 0.06em; }
+.feature input {
+  width: 100%;
+  min-height: 2.7rem;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 0.6rem;
+  background: var(--bg);
+  color: var(--white);
+}
+.feature input::placeholder { color: #6d6d71; }
+.feature input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(190, 175, 135, 0.2); }
+.feature .icon-btn { height: 2.7rem; }
+#features .field__error:not(:empty) { margin: 0 0 0.6rem; }
 
 .session {
   position: relative;

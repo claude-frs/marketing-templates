@@ -1,0 +1,100 @@
+{#
+  Flyer / just-listed-angle
+  Just Listed data shape: no dates. This design shows beds, baths, sq ft
+  and garage as figures and does not print listing.features. See notes.md.
+
+  "JUST LISTED" and the price share one size; prices of 11 characters or
+  more step both down together.
+
+  Photos: the hero above the cut; up to five gallery photos that are not
+  the hero. Three stack on the right (two when there are only three), and
+  the rest sit in a row under the figures. No features, headline or description.
+
+  Optional fields are guarded with {% if %}; never | default().
+#}
+{%- set l = flyer.listing -%}
+{%- set a = flyer.agentInfo -%}
+{%- set others = [] -%}
+{%- for src in l.galleryImageUrls or [] %}{% if src and src != l.heroImageUrl and others.length < 5 %}{% set _n = others.push(src) %}{% endif %}{% endfor -%}
+{#- How many go in the right column; the rest go in the row on the left.
+    With exactly three, split 2 + 1 so neither side is left empty. #}
+{%- set split = 2 if others.length == 3 else (3 if others.length > 3 else others.length) -%}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Just Listed · {{ l.street }}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="jla{% if l.price and l.price.length >= 11 %} jla--price-long{% endif %}">
+  <div class="jla-sheet">
+    <div class="jla-gold"></div>
+    <div class="jla-hero"><img src="{{ l.heroImageUrl }}" alt=""{% if l.heroPositionX %} style="--hero-x: {{ l.heroPositionX }}%"{% endif %}></div>
+
+    <div class="jla-trim">
+
+      <div class="jla-top">
+        <img class="jla-logo" src="assets/c21-masters-white.svg" alt="CENTURY 21 Masters">
+        <p class="jla-top__place">{{ l.city }}, {{ l.state }}</p>
+      </div>
+
+      <div class="jla-left">
+        <h1 class="jla-title">Just <span>Listed</span></h1>
+        {%- if l.price %}
+        <div class="jla-price">
+          <p class="jla-price__value">{{ l.price }}</p>
+          <p class="jla-price__label">{% if l.priceLabel %}{{ l.priceLabel }}{% else %}Offered at{% endif %}</p>
+        </div>
+        {%- endif %}
+        <div class="jla-line">
+          <p class="jla-address">{{ l.street }} <span>· {{ l.city }}, {{ l.state }} {{ l.zip }}</span></p>
+        </div>
+        <p class="jla-figures">
+          {%- if l.beds %}<span><b>{{ l.beds }}</b>{% if l.beds == "1" %}Bed{% else %}Beds{% endif %}</span>{% endif %}
+          {%- if l.baths %}<span><b>{{ l.baths }}</b>{% if l.baths == "1" %}Bath{% else %}Baths{% endif %}</span>{% endif %}
+          {%- if l.sqft %}<span><b>{{ l.sqft }}</b>Sq Ft</span>{% endif %}
+          {%- if l.garageSpaces %}<span><b>{{ l.garageSpaces }}-Car</b>Garage</span>{% endif %}
+        </p>
+        {%- if others.length > split %}
+        <div class="jla-row">
+          {%- for src in others %}{% if loop.index > split %}
+          <div><img src="{{ src }}" alt=""></div>
+          {%- endif %}{% endfor %}
+        </div>
+        {%- endif %}
+      </div>
+
+      {%- if others.length %}
+      <div class="jla-inside">
+        {%- for src in others %}{% if loop.index <= split %}
+        <div><img src="{{ src }}" alt=""></div>
+        {%- endif %}{% endfor %}
+      </div>
+      {%- endif %}
+
+      <footer class="jla-footer">
+        <div class="jla-agent__photo">
+          {%- if a.headshotUrl %}<img src="{{ a.headshotUrl }}" alt="{{ a.fullName }}">{% endif -%}
+        </div>
+        <div class="jla-agent">
+          <p class="jla-agent__name">{{ a.fullName }}</p>
+          <p class="jla-agent__credential">{% if a.jobTitle %}{{ a.jobTitle }}{% else %}Realtor®{% endif %}{% if a.dre %} | DRE #{{ a.dre }}{% endif %}</p>
+        </div>
+        <div class="jla-contact">
+          {%- if a.phone %}<p><img src="assets/icon-phone.svg" alt="">{{ a.phone }}</p>{% endif %}
+          {%- if a.email %}<p><img src="assets/icon-email.svg" alt="">{{ a.email }}</p>{% endif %}
+        </div>
+        <p class="jla-cta"><b>{% if flyer.cta.heading %}{{ flyer.cta.heading }}{% else %}Want to see it?{% endif %}</b><span>{% if flyer.cta.subline %}{{ flyer.cta.subline }}{% else %}Call me for a private tour.{% endif %}</span></p>
+      </footer>
+
+      <div class="jla-legal">
+        <img src="assets/equal-housing-black.png" alt="Equal Housing Opportunity">
+        <img src="assets/realtor-black.png" alt="REALTOR®">
+        {# Word for word from brand/legal-text.md (Flyers). #}
+        <p>Each office is Independently Owned &amp; Operated | Broker DRE# 01849354</p>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

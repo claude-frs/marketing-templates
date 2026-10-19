@@ -1,0 +1,486 @@
+/* ==========================================================================
+   Flyer / just-listed-cover
+   8.5 x 11 in, 0.125 in bleed. Relentless palette only. Photo / dark.
+
+   The idea: a magazine cover. "JUST LISTED" is the masthead across the top,
+   the house is the cover image, and the features are the cover lines down
+   both sides. The headline is the lead story. Price and address sit at the
+   foot of the image like the issue's main line, the interiors are "inside
+   this issue", and the agent signs off underneath.
+
+   Units are pt. .jlc-sheet is trim + bleed (630 x 810), .jlc-trim is the
+   finished size (612 x 792) and everything is placed in trim coordinates.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Medium.otf") format("opentype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Bold.otf") format("opentype");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@page {
+  size: 8.75in 11.25in;
+  margin: 0;
+}
+
+.jlc {
+  /* Relentless palette */
+  --gold: #beaf87;
+  --gold-med: #ded7c3;
+  --gold-lt: #f8f7f2;
+  --white: #ffffff;
+  --grey: #252526;
+  --grey-rgb: 37, 37, 38;
+
+  --bleed: 9pt;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.jlc {
+  background: #d9d9d9;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+@media print {
+  body.jlc {
+    background: none;
+  }
+}
+
+/* :where() keeps the reset at single-class weight so element rules win. */
+.jlc :where(p, h1, h2, ul) {
+  margin: 0;
+  padding: 0;
+}
+
+.jlc ul {
+  list-style: none;
+}
+
+.jlc img {
+  display: block;
+}
+
+.jlc-sheet {
+  position: relative;
+  width: 630pt;
+  height: 810pt;
+  overflow: hidden;
+  background: var(--grey);
+  color: var(--white);
+  font-family: "Oakes Grotesk", sans-serif;
+}
+
+.jlc-trim {
+  position: absolute;
+  inset: var(--bleed);
+}
+
+/* --------------------------------------------------------------------------
+   The cover image: full bleed to y 560, shaded at the top for the
+   masthead, at both sides for the cover lines and at the foot into the
+   ground. The middle of the house stays clear. All shading runs the full
+   size of the photo so nothing has an edge.
+   -------------------------------------------------------------------------- */
+
+.jlc-hero {
+  position: absolute;
+  left: calc(-1 * var(--bleed));
+  right: calc(-1 * var(--bleed));
+  top: calc(-1 * var(--bleed));
+  height: calc(560pt + var(--bleed));
+}
+
+.jlc-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--hero-x, 50%) center;
+}
+
+.jlc-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom,
+      rgba(var(--grey-rgb), 0.78) 0%,
+      rgba(var(--grey-rgb), 0.2) 30%,
+      rgba(var(--grey-rgb), 0) 45%,
+      rgba(var(--grey-rgb), 0) 58%,
+      rgba(var(--grey-rgb), 0.85) 86%,
+      rgb(var(--grey-rgb)) 100%),
+    linear-gradient(to right,
+      rgba(var(--grey-rgb), 0.7) 0%,
+      rgba(var(--grey-rgb), 0) 40%,
+      rgba(var(--grey-rgb), 0) 62%,
+      rgba(var(--grey-rgb), 0.7) 100%);
+}
+
+/* --------------------------------------------------------------------------
+   Masthead
+   -------------------------------------------------------------------------- */
+
+.jlc-strip {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 26pt;
+  height: 33pt;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8pt;
+  border-bottom: 0.75pt solid rgba(255, 255, 255, 0.55);
+}
+
+.jlc-logo {
+  height: 25pt;
+  width: auto;
+}
+
+.jlc-strip__place {
+  font-weight: 700;
+  font-size: 7.5pt;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.jlc-masthead {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 62pt;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 80pt;
+  line-height: 1;
+  letter-spacing: -0.005em;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.jlc-masthead span {
+  color: var(--gold);
+}
+
+/* --------------------------------------------------------------------------
+   Cover lines: headline as the lead on the left, features split between
+   the two sides. Anchored at the top so they read down from the masthead.
+   -------------------------------------------------------------------------- */
+
+.jlc-lines {
+  position: absolute;
+  top: 168pt;
+  width: 172pt;
+  display: flex;
+  flex-direction: column;
+  gap: 11pt;
+}
+
+.jlc-lines--left {
+  left: 30pt;
+}
+
+.jlc-lines--right {
+  right: 30pt;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.jlc-lead {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 17pt;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.jlc-line {
+  font-family: "Typold", sans-serif;
+  font-weight: 500;
+  font-size: 10.5pt;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.jlc-line::before {
+  content: "";
+  display: block;
+  width: 18pt;
+  margin-bottom: 4pt;
+  border-top: 1.5pt solid var(--gold);
+}
+
+.jlc-lines--right .jlc-line::before {
+  margin-left: auto;
+}
+
+/* --------------------------------------------------------------------------
+   The main line: price and address left, the three numbers right
+   -------------------------------------------------------------------------- */
+
+.jlc-main {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  bottom: 236pt;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20pt;
+}
+
+.jlc-price__label {
+  font-weight: 700;
+  font-size: 7pt;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold-med);
+}
+
+.jlc-price__value {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 40pt;
+  line-height: 1;
+  color: var(--gold);
+}
+
+.jlc-address {
+  margin-top: 6pt;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 13pt;
+  line-height: 1.2;
+}
+
+.jlc-address span {
+  display: block;
+  font-family: "Oakes Grotesk", sans-serif;
+  font-weight: 400;
+  font-size: 9.5pt;
+  color: var(--gold-med);
+}
+
+.jlc-figures {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.jlc-figure {
+  padding: 0 0 0 14pt;
+  text-align: right;
+}
+
+.jlc-figure + .jlc-figure {
+  margin-left: 14pt;
+  border-left: 0.75pt solid var(--gold);
+}
+
+.jlc-figure b {
+  display: block;
+  font-family: "Typold", sans-serif;
+  font-size: 22pt;
+  line-height: 1;
+}
+
+.jlc-figure span {
+  font-weight: 700;
+  font-size: 6.5pt;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold-med);
+}
+
+/* --------------------------------------------------------------------------
+   Inside this issue: three interiors
+   -------------------------------------------------------------------------- */
+
+.jlc-inside {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 574pt;
+}
+
+.jlc-inside__label {
+  display: flex;
+  align-items: center;
+  gap: 10pt;
+  font-weight: 700;
+  font-size: 7pt;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.jlc-inside__label::after {
+  content: "";
+  flex: 1 1 0;
+  border-top: 0.75pt solid rgba(190, 175, 135, 0.5);
+}
+
+.jlc-inside__photos {
+  margin-top: 8pt;
+  display: flex;
+  gap: 8pt;
+  height: 92pt;
+}
+
+.jlc-inside__photos div {
+  flex: 1 1 0;
+}
+
+.jlc-inside__photos img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --------------------------------------------------------------------------
+   Sign-off: agent, contact, call to action
+   -------------------------------------------------------------------------- */
+
+.jlc-footer {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 694pt;
+  display: flex;
+  align-items: center;
+  gap: 14pt;
+}
+
+.jlc-agent__photo {
+  flex-shrink: 0;
+  width: 56pt;
+  height: 56pt;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1.5pt solid var(--gold);
+  background: var(--gold-med);
+}
+
+.jlc-agent__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+}
+
+.jlc-agent {
+  min-width: 0;
+  max-width: 164pt;
+}
+
+.jlc-agent__name {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 13pt;
+  line-height: 1.15;
+  color: var(--gold);
+  text-wrap: balance;
+}
+
+.jlc-agent__credential {
+  margin-top: 1pt;
+  font-size: 8pt;
+  color: var(--gold-med);
+  white-space: nowrap;
+}
+
+.jlc-contact {
+  flex-shrink: 0;
+  padding-left: 14pt;
+  border-left: 0.75pt solid rgba(190, 175, 135, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 4pt;
+}
+
+.jlc-contact p {
+  display: flex;
+  align-items: center;
+  gap: 6pt;
+  font-size: 9pt;
+  white-space: nowrap;
+}
+
+.jlc-contact img {
+  width: 11pt;
+  height: 11pt;
+}
+
+.jlc-cta {
+  flex-shrink: 0;
+  margin-left: auto;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.jlc-cta__heading {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 11pt;
+}
+
+.jlc-cta__sub {
+  margin-top: 1pt;
+  font-size: 8pt;
+  color: var(--gold-med);
+}
+
+.jlc-legal {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 762pt;
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+  color: var(--gold-med);
+}
+
+.jlc-legal img {
+  height: 11pt;
+  width: auto;
+}
+
+.jlc-legal p {
+  margin-left: 2pt;
+  font-size: 6pt;
+}

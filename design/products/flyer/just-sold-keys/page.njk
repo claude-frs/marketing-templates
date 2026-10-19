@@ -1,0 +1,87 @@
+{#
+  Flyer / just-sold-keys
+  Just Sold data shape: listing (address, beds, baths, sqft, garageSpaces,
+  photos) plus sale { soldPriceLabel, soldPrice, side }. soldPrice is
+  optional (the seller must agree to show it); side is "seller", "buyer",
+  "both" or empty. No features, headline or description. See notes.md.
+
+  Needs agentInfo.headshotCutoutUrl (background removed), ideally of the
+  agent holding keys or gesturing towards the reader. Photos: the hero,
+  faint, full bleed. sale.message, if set, replaces the congratulations
+  line.
+
+  Optional fields are guarded with {% if %}; never | default().
+#}
+{%- set l = flyer.listing -%}
+{%- set a = flyer.agentInfo -%}
+{%- set s = flyer.sale or {} -%}
+{%- set sides = { "seller": "Represented the seller", "buyer": "Represented the buyer", "both": "Represented the buyer and seller" } -%}
+{%- set side = sides[s.side] if s.side else "" -%}
+{%- set ctaHead = flyer.cta.heading if flyer.cta and flyer.cta.heading else "Thinking of selling?" -%}
+{%- set ctaSub = flyer.cta.subline if flyer.cta and flyer.cta.subline else "Call me for a free home valuation." -%}
+{%- set others = [] -%}
+{%- for src in l.galleryImageUrls or [] %}{% if src and src != l.heroImageUrl and others.length < 0 %}{% set _n = others.push(src) %}{% endif %}{% endfor -%}
+{%- set words = (l.street or "").split(" ") -%}
+{%- set streetName = words.slice(1).join(" ") if r/^\d/.test(words[0]) else l.street -%}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Just Sold · {{ l.street }}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="jky">
+  <div class="jky-sheet">
+    <div class="jky-hero"><img src="{{ l.heroImageUrl }}" alt=""{% if l.heroPositionX %} style="--hero-x: {{ l.heroPositionX }}%"{% endif %}></div>
+    <div class="jky-trim">
+
+      <img class="jky-logo" src="assets/c21-masters-white.svg" alt="CENTURY 21 Masters">
+      <h1 class="jky-sold">Sold<span>.</span></h1>
+
+      <div class="jky-cutout">
+        {%- if a.headshotCutoutUrl %}<img src="{{ a.headshotCutoutUrl }}" alt="{{ a.fullName }}">{% endif -%}
+      </div>
+
+      <div class="jky-col">
+        <p class="jky-headline">The keys are handed over.</p>
+        <p class="jky-message">{% if s.message %}{{ s.message }}{% else %}Congratulations to the new owners of {{ l.street }}, and welcome to {{ l.city }}.{% endif %}</p>
+
+        <div class="jky-sale">
+          {%- if s.soldPrice %}
+          <p class="jky-caption jky-price__caption">{% if s.soldPriceLabel %}{{ s.soldPriceLabel }}{% else %}Sold for{% endif %}</p>
+          <p class="jky-price__value">{{ s.soldPrice }}</p>
+          {%- endif %}
+          {%- if side %}<p class="jky-side">{{ side }}</p>{% endif %}
+          <p class="jky-address">{{ l.street }}<span>{{ l.city }}, {{ l.state }} {{ l.zip }}</span></p>
+          <p class="jky-figures">
+            {%- if l.beds %}<span><b>{{ l.beds }}</b>{% if l.beds == "1" %}Bed{% else %}Beds{% endif %}</span>{% endif %}
+            {%- if l.baths %}<span><b>{{ l.baths }}</b>{% if l.baths == "1" %}Bath{% else %}Baths{% endif %}</span>{% endif %}
+            {%- if l.sqft %}<span><b>{{ l.sqft }}</b>Sq Ft</span>{% endif %}
+            {%- if l.garageSpaces %}<span><b>{{ l.garageSpaces }}-Car</b>Garage</span>{% endif %}
+          </p>
+        </div>
+
+        <p class="jky-cta"><b>{{ ctaHead }}</b><span>{{ ctaSub }}</span></p>
+        <div class="jky-agent">
+          <div>
+            <p class="jky-agent__name">{{ a.fullName }}</p>
+            <p class="jky-agent__credential">{% if a.jobTitle %}{{ a.jobTitle }}{% else %}Realtor®{% endif %}{% if a.dre %} | DRE #{{ a.dre }}{% endif %}</p>
+            <div class="jky-contact">
+            {%- if a.phone %}<p><img src="assets/icon-phone-gold.svg" alt="">{{ a.phone }}</p>{% endif %}
+            {%- if a.email %}<p><img src="assets/icon-email-gold.svg" alt="">{{ a.email }}</p>{% endif %}
+          </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="jky-legal">
+        <img src="assets/equal-housing-white.png" alt="Equal Housing Opportunity">
+        <img src="assets/realtor-white.png" alt="REALTOR®">
+        {# Word for word from brand/legal-text.md (Flyers). #}
+        <p>Each office is Independently Owned &amp; Operated | Broker DRE# 01849354</p>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

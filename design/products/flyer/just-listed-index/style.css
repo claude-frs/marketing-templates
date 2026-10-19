@@ -1,0 +1,436 @@
+/* ==========================================================================
+   Flyer / just-listed-index
+   8.5 x 11 in, 0.125 in bleed. Relentless palette only. White ground.
+
+   The idea: Swiss editorial. "JUST LISTED" runs the full height of the left
+   edge as a vertical title, set apart by one gold hairline. Everything else
+   hangs on a strict grid to its right: the house, the interiors, the price
+   and the three figures, then the features as a numbered index (01, 02 ...)
+   in two columns. Nothing is decorated; the grid is the design.
+
+   Units are pt. .jli-sheet is trim + bleed (630 x 810), .jli-trim is the
+   finished size (612 x 792) and everything is placed in trim coordinates.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Medium.otf") format("opentype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Bold.otf") format("opentype");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@page {
+  size: 8.75in 11.25in;
+  margin: 0;
+}
+
+.jli {
+  /* Relentless palette */
+  --gold: #beaf87;
+  --gold-med: #ded7c3;
+  --white: #ffffff;
+  --grey-lt: #f4f4f6;
+  --grey-med: #c4c4c6;
+  --grey: #252526;
+
+  --bleed: 9pt;
+  /* The content column, right of the vertical title. */
+  --col-x: 130pt;
+  --col-w: 452pt;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.jli {
+  background: #d9d9d9;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+@media print {
+  body.jli {
+    background: none;
+  }
+}
+
+/* :where() keeps the reset at single-class weight so element rules win. */
+.jli :where(p, h1, h2, ol, ul) {
+  margin: 0;
+  padding: 0;
+}
+
+.jli :where(ol, ul) {
+  list-style: none;
+}
+
+.jli img {
+  display: block;
+}
+
+.jli-sheet {
+  position: relative;
+  width: 630pt;
+  height: 810pt;
+  overflow: hidden;
+  background: var(--white);
+  color: var(--grey);
+  font-family: "Oakes Grotesk", sans-serif;
+}
+
+.jli-trim {
+  position: absolute;
+  inset: var(--bleed);
+}
+
+/* --------------------------------------------------------------------------
+   The vertical title and its hairline
+   -------------------------------------------------------------------------- */
+
+/* Reads bottom to top, starting at the bottom margin. */
+.jli-title {
+  position: absolute;
+  left: 20pt;
+  top: 30pt;
+  bottom: 30pt;
+  width: 84pt;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-align: left;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 100pt;
+  line-height: 0.9;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.jli-title span {
+  color: var(--gold);
+}
+
+.jli-hairline {
+  position: absolute;
+  left: 112pt;
+  top: 30pt;
+  bottom: 30pt;
+  border-left: 0.75pt solid var(--gold);
+}
+
+/* --------------------------------------------------------------------------
+   Content column
+   -------------------------------------------------------------------------- */
+
+.jli-top {
+  position: absolute;
+  left: var(--col-x);
+  width: var(--col-w);
+  top: 30pt;
+  height: 25pt;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.jli-logo {
+  height: 25pt;
+  width: auto;
+}
+
+.jli-top__place {
+  font-weight: 700;
+  font-size: 7.5pt;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+/* The house, the interiors and the body flow as one column between the
+   logo and the agent row. The hero takes whatever height is left, so
+   short listings get a bigger house and long ones never overflow. */
+.jli-main {
+  position: absolute;
+  left: var(--col-x);
+  width: var(--col-w);
+  top: 70pt;
+  bottom: 106pt;
+  display: flex;
+  flex-direction: column;
+  gap: 8pt;
+}
+
+.jli-hero {
+  flex: 1 1 0;
+  min-height: 150pt;
+}
+
+.jli-hero img,
+.jli-inside img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.jli-hero img {
+  object-position: var(--hero-x, 50%) center;
+}
+
+.jli-inside {
+  flex: 0 0 78pt;
+  display: flex;
+  gap: 8pt;
+}
+
+.jli-inside div {
+  flex: 1 1 0;
+}
+
+/* Body: price and figures, features, story. One flowing column between
+   the photos and the agent row. */
+.jli-body {
+  flex: 0 0 auto;
+  margin-top: 10pt;
+}
+
+.jli-key {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16pt;
+  padding-bottom: 12pt;
+  border-bottom: 0.75pt solid var(--grey);
+}
+
+.jli-price__label {
+  font-weight: 700;
+  font-size: 7pt;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.jli-price__value {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 32pt;
+  line-height: 1;
+}
+
+.jli-address {
+  margin-top: 5pt;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 11.5pt;
+  line-height: 1.2;
+}
+
+.jli-address span {
+  display: block;
+  font-family: "Oakes Grotesk", sans-serif;
+  font-weight: 400;
+  font-size: 9pt;
+}
+
+.jli-figures {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.jli-figure {
+  padding-left: 12pt;
+}
+
+.jli-figure + .jli-figure {
+  margin-left: 12pt;
+  border-left: 0.75pt solid var(--grey-med);
+}
+
+.jli-figure b {
+  display: block;
+  font-family: "Typold", sans-serif;
+  font-size: 22pt;
+  line-height: 1;
+}
+
+.jli-figure span {
+  font-weight: 700;
+  font-size: 6.5pt;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* The numbered index: two columns, filled down then across. */
+.jli-features {
+  margin-top: 4pt;
+  columns: 2;
+  column-gap: 20pt;
+}
+
+.jli-feature {
+  break-inside: avoid;
+  display: flex;
+  gap: 9pt;
+  padding: 5pt 0;
+  border-bottom: 0.5pt solid var(--grey-med);
+  font-size: 9pt;
+  line-height: 1.3;
+}
+
+.jli-feature b {
+  flex-shrink: 0;
+  width: 16pt;
+  font-family: "Typold", sans-serif;
+  font-size: 9pt;
+  color: var(--gold);
+}
+
+.jli-story {
+  margin-top: 12pt;
+}
+
+.jli-story__headline {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 11.5pt;
+  line-height: 1.2;
+}
+
+.jli-story__body {
+  margin-top: 4pt;
+  font-size: 8.25pt;
+  line-height: 1.42;
+  text-wrap: pretty;
+}
+
+/* --------------------------------------------------------------------------
+   Agent row and legal
+   -------------------------------------------------------------------------- */
+
+.jli-footer {
+  position: absolute;
+  left: var(--col-x);
+  width: var(--col-w);
+  top: 698pt;
+  padding-top: 10pt;
+  border-top: 0.75pt solid var(--grey);
+  display: flex;
+  align-items: center;
+  gap: 12pt;
+}
+
+.jli-agent__photo {
+  flex-shrink: 0;
+  width: 46pt;
+  height: 46pt;
+  overflow: hidden;
+  background: var(--grey-lt);
+}
+
+.jli-agent__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+}
+
+.jli-agent {
+  min-width: 0;
+  max-width: 160pt;
+}
+
+.jli-agent__name {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 12pt;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.jli-agent__credential {
+  font-size: 7.5pt;
+  white-space: nowrap;
+}
+
+.jli-contact {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3pt;
+}
+
+.jli-contact p {
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+  font-size: 8pt;
+  white-space: nowrap;
+}
+
+.jli-contact img {
+  width: 10pt;
+  height: 10pt;
+}
+
+.jli-cta {
+  flex-shrink: 0;
+  margin-left: auto;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.jli-cta__heading {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 10pt;
+}
+
+.jli-cta__sub {
+  font-size: 7.5pt;
+}
+
+.jli-legal {
+  position: absolute;
+  left: var(--col-x);
+  width: var(--col-w);
+  top: 762pt;
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+}
+
+.jli-legal img {
+  height: 11pt;
+  width: auto;
+}
+
+.jli-legal p {
+  margin-left: 2pt;
+  font-size: 6pt;
+}

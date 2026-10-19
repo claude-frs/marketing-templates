@@ -1,0 +1,107 @@
+{#
+  Flyer / just-listed-cover
+  Just Listed data shape: no dates; beds/baths/sqft plus listing.features,
+  a list of 3 to 10 short lines. See notes.md.
+
+  Photos: the hero is the cover image. Gallery photos 2 to 4 are "inside
+  this issue". Gallery photo 1 (usually the exterior again) is not used.
+
+  The description is not printed: the headline is the lead cover line and
+  the features carry the detail.
+
+  Optional fields are guarded with {% if %}; never | default().
+#}
+{%- set l = flyer.listing -%}
+{%- set a = flyer.agentInfo -%}
+{%- set f = l.features or [] -%}
+{%- set half = (f | length / 2) | round(0, "floor") -%}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Just Listed · {{ l.street }}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="jlc">
+  <div class="jlc-sheet">
+    <div class="jlc-trim">
+
+      <div class="jlc-hero">
+        <img src="{{ l.heroImageUrl }}" alt=""{% if l.heroPositionX %} style="--hero-x: {{ l.heroPositionX }}%"{% endif %}>
+      </div>
+
+      <div class="jlc-strip">
+        <img class="jlc-logo" src="assets/c21-masters-white.svg" alt="CENTURY 21 Masters">
+        <p class="jlc-strip__place">{{ l.city }}, {{ l.state }}</p>
+      </div>
+
+      <h1 class="jlc-masthead">Just <span>Listed</span></h1>
+
+      <ul class="jlc-lines jlc-lines--left">
+        {%- if l.headline %}
+        <li class="jlc-lead">{{ l.headline }}</li>
+        {%- endif %}
+        {%- for item in f %}{% if loop.index <= half %}
+        <li class="jlc-line">{{ item }}</li>
+        {%- endif %}{% endfor %}
+      </ul>
+
+      <ul class="jlc-lines jlc-lines--right">
+        {%- for item in f %}{% if loop.index > half %}
+        <li class="jlc-line">{{ item }}</li>
+        {%- endif %}{% endfor %}
+      </ul>
+
+      <div class="jlc-main">
+        <div>
+          {%- if l.price %}
+          <p class="jlc-price__label">{% if l.priceLabel %}{{ l.priceLabel }}{% else %}Offered at{% endif %}</p>
+          <p class="jlc-price__value">{{ l.price }}</p>
+          {%- endif %}
+          <p class="jlc-address">{{ l.street }}<span>{{ l.city }}, {{ l.state }} {{ l.zip }}</span></p>
+        </div>
+        <ul class="jlc-figures">
+          {%- if l.beds %}<li class="jlc-figure"><b>{{ l.beds }}</b><span>{% if l.beds == "1" %}Bed{% else %}Beds{% endif %}</span></li>{% endif %}
+          {%- if l.baths %}<li class="jlc-figure"><b>{{ l.baths }}</b><span>{% if l.baths == "1" %}Bath{% else %}Baths{% endif %}</span></li>{% endif %}
+          {%- if l.sqft %}<li class="jlc-figure"><b>{{ l.sqft }}</b><span>Sq Ft</span></li>{% endif %}
+        </ul>
+      </div>
+
+      <div class="jlc-inside">
+        <p class="jlc-inside__label">Inside</p>
+        <div class="jlc-inside__photos">
+          {%- for src in l.galleryImageUrls %}{% if loop.index > 1 %}
+          <div><img src="{{ src }}" alt=""></div>
+          {%- endif %}{% endfor %}
+        </div>
+      </div>
+
+      <footer class="jlc-footer">
+        <div class="jlc-agent__photo">
+          {%- if a.headshotUrl %}<img src="{{ a.headshotUrl }}" alt="{{ a.fullName }}">{% endif -%}
+        </div>
+        <div class="jlc-agent">
+          <p class="jlc-agent__name">{{ a.fullName }}</p>
+          <p class="jlc-agent__credential">{% if a.jobTitle %}{{ a.jobTitle }}{% else %}Realtor®{% endif %}{% if a.dre %} | DRE #{{ a.dre }}{% endif %}</p>
+        </div>
+        <div class="jlc-contact">
+          {%- if a.phone %}<p><img src="assets/icon-phone-gold.svg" alt="">{{ a.phone }}</p>{% endif %}
+          {%- if a.email %}<p><img src="assets/icon-email-gold.svg" alt="">{{ a.email }}</p>{% endif %}
+        </div>
+        <div class="jlc-cta">
+          <p class="jlc-cta__heading">{% if flyer.cta.heading %}{{ flyer.cta.heading }}{% else %}Want to see it?{% endif %}</p>
+          <p class="jlc-cta__sub">{% if flyer.cta.subline %}{{ flyer.cta.subline }}{% else %}Call me for a private tour.{% endif %}</p>
+        </div>
+      </footer>
+
+      <div class="jlc-legal">
+        <img src="assets/equal-housing-white.png" alt="Equal Housing Opportunity">
+        <img src="assets/realtor-white.png" alt="REALTOR®">
+        {# Word for word from brand/legal-text.md (Flyers). #}
+        <p>Each office is Independently Owned &amp; Operated | Broker DRE# 01849354</p>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

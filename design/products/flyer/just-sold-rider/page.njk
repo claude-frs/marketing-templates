@@ -1,0 +1,103 @@
+{#
+  Flyer / just-sold-rider
+  Just Sold data shape: listing (address, beds, baths, sqft, garageSpaces,
+  photos) plus sale { soldPriceLabel, soldPrice, side }. soldPrice is
+  optional (the seller must agree to show it); side is "seller", "buyer",
+  "both" or empty. No features, headline or description. See notes.md.
+
+  Photos: the hero in the sign, and up to three interiors that are not the
+  hero in the column beside it. agentInfo.website is optional. The phone
+  is the large line on the sign's name strip, as on a real yard sign.
+
+  Optional fields are guarded with {% if %}; never | default().
+#}
+{%- set l = flyer.listing -%}
+{%- set a = flyer.agentInfo -%}
+{%- set s = flyer.sale or {} -%}
+{%- set sides = { "seller": "Represented the seller", "buyer": "Represented the buyer", "both": "Represented the buyer and seller" } -%}
+{%- set side = sides[s.side] if s.side else "" -%}
+{%- set ctaHead = flyer.cta.heading if flyer.cta and flyer.cta.heading else "Thinking of selling?" -%}
+{%- set ctaSub = flyer.cta.subline if flyer.cta and flyer.cta.subline else "Call me for a free home valuation." -%}
+{%- set others = [] -%}
+{%- for src in l.galleryImageUrls or [] %}{% if src and src != l.heroImageUrl and others.length < 3 %}{% set _n = others.push(src) %}{% endif %}{% endfor -%}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Just Sold · {{ l.street }}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="jsr">
+  <div class="jsr-sheet">
+    <div class="jsr-trim">
+
+      <img class="jsr-logo" src="assets/c21-masters-black.svg" alt="CENTURY 21 Masters">
+
+      <div class="jsr-post"></div>
+      <div class="jsr-arm"></div>
+      <div class="jsr-ground"></div>
+      <div class="jsr-chain" style="left: 100pt; top: 102pt; height: 18pt"></div>
+      <div class="jsr-chain" style="left: 390pt; top: 102pt; height: 18pt"></div>
+      <h1 class="jsr-rider"><span class="jsr-rider__just">Just</span><span class="jsr-rider__sold">Sold!</span></h1>
+      <div class="jsr-chain" style="left: 100pt; top: 216pt; height: 28pt"></div>
+      <div class="jsr-chain" style="left: 390pt; top: 216pt; height: 28pt"></div>
+
+      <div class="jsr-hang">
+        <div class="jsr-sign"><img src="{{ l.heroImageUrl }}" alt=""{% if l.heroPositionX %} style="--hero-x: {{ l.heroPositionX }}%"{% endif %}></div>
+        <div class="jsr-street">
+          <p class="jsr-street__name">{{ l.street }}</p>
+          <p class="jsr-street__city">{{ l.city }}, {{ l.state }} {{ l.zip }}</p>
+        </div>
+        <ul class="jsr-plates">
+          {%- if l.beds %}<li class="jsr-plate"><b>{{ l.beds }}</b><span>{% if l.beds == "1" %}Bed{% else %}Beds{% endif %}</span></li>{% endif %}
+        {%- if l.baths %}<li class="jsr-plate"><b>{{ l.baths }}</b><span>{% if l.baths == "1" %}Bath{% else %}Baths{% endif %}</span></li>{% endif %}
+        {%- if l.sqft %}<li class="jsr-plate"><b>{{ l.sqft }}</b><span>Sq Ft</span></li>{% endif %}
+        {%- if l.garageSpaces %}<li class="jsr-plate"><b>{{ l.garageSpaces }}-Car</b><span>Garage</span></li>{% endif %}
+        </ul>
+      </div>
+
+      <div class="jsr-col">
+        {%- for src in others %}
+        <div class="jsr-col__photo"><img src="{{ src }}" alt=""></div>
+        {%- endfor %}
+        {%- if s.soldPrice or side %}
+        <div class="jsr-price">
+          {%- if s.soldPrice %}
+            <p class="jsr-caption jsr-price__caption">{% if s.soldPriceLabel %}{{ s.soldPriceLabel }}{% else %}Sold for{% endif %}</p>
+            <p class="jsr-price__value">{{ s.soldPrice }}</p>
+            {%- endif %}
+            {%- if side %}<p class="jsr-side">{{ side }}</p>{% endif %}
+        </div>
+        {%- endif %}
+        <div class="jsr-cheer">
+          <p class="jsr-cheer__word">Congratulations</p>
+          <p class="jsr-cheer__to">to the new owners!</p>
+        </div>
+      </div>
+
+      <div class="jsr-agent">
+        <div class="jsr-agent__photo">
+          {%- if a.headshotUrl %}<img src="{{ a.headshotUrl }}" alt="{{ a.fullName }}">{% endif -%}
+        </div>
+        <div class="jsr-agent__who">
+          <p class="jsr-agent__ask">{{ ctaHead }} {{ ctaSub }}</p>
+          <p class="jsr-agent__name">{{ a.fullName }}</p>
+          <p class="jsr-agent__credential">{% if a.jobTitle %}{{ a.jobTitle }}{% else %}Realtor®{% endif %}{% if a.dre %} | DRE #{{ a.dre }}{% endif %}</p>
+        </div>
+        <div class="jsr-agent__reach">
+          {%- if a.phone %}<p class="jsr-agent__phone">{{ a.phone }}</p>{% endif %}
+          <p class="jsr-agent__more">{%- if a.email %}{{ a.email }}{% endif %}{% if a.email and a.website %}<br>{% endif %}{% if a.website %}{{ a.website }}{% endif %}</p>
+        </div>
+      </div>
+
+      <div class="jsr-legal">
+        <img src="assets/equal-housing-black.png" alt="Equal Housing Opportunity">
+        <img src="assets/realtor-black.png" alt="REALTOR®">
+        {# Word for word from brand/legal-text.md (Flyers). #}
+        <p>Each office is Independently Owned &amp; Operated | Broker DRE# 01849354</p>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

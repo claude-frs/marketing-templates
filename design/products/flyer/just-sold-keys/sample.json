@@ -1,0 +1,40 @@
+{
+  "template": "just-sold-keys",
+  "flyerType": "just-sold",
+  "agentInfo": {
+    "fullName": "Marcus Hale",
+    "jobTitle": "Realtor®",
+    "dre": "02184736",
+    "phone": "(805) 555-0147",
+    "email": "marcus@halehomesca.com",
+    "headshotUrl": "assets/sample/headshot.png",
+    "headshotCutoutUrl": "assets/sample/headshot-cutout.png"
+  },
+  "listing": {
+    "street": "1847 Larkspur Ridge Drive",
+    "city": "Thousand Oaks",
+    "state": "CA",
+    "zip": "91362",
+    "beds": "4",
+    "baths": "3.5",
+    "sqft": "3,240",
+    "garageSpaces": "2",
+    "heroImageUrl": "assets/sample/hero.jpg",
+    "heroPositionX": "",
+    "galleryImageUrls": [
+      "assets/sample/hero.jpg",
+      "assets/sample/kitchen.png",
+      "assets/sample/living.png",
+      "assets/sample/bedroom.png"
+    ]
+  },
+  "sale": {
+    "soldPriceLabel": "Sold for",
+    "soldPrice": "$2,140,000",
+    "side": "seller"
+  },
+  "cta": {
+    "heading": "",
+    "subline": ""
+  }
+}

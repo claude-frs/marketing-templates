@@ -1,0 +1,107 @@
+{#
+  Flyer / just-sold-mosaic
+  Just Sold data shape: listing (address, beds, baths, sqft, garageSpaces,
+  photos) plus sale { soldPriceLabel, soldPrice, side }. soldPrice is
+  optional (the seller must agree to show it); side is "seller", "buyer",
+  "both" or empty. No features, headline or description. See notes.md.
+
+  Photos: the hero in the mosaic, and up to two interiors that are not the
+  hero stacked beside it. agentInfo.website is optional.
+
+  Optional fields are guarded with {% if %}; never | default().
+#}
+{%- set l = flyer.listing -%}
+{%- set a = flyer.agentInfo -%}
+{%- set s = flyer.sale or {} -%}
+{%- set sides = { "seller": "Represented the seller", "buyer": "Represented the buyer", "both": "Represented the buyer and seller" } -%}
+{%- set side = sides[s.side] if s.side else "" -%}
+{%- set ctaHead = flyer.cta.heading if flyer.cta and flyer.cta.heading else "Thinking of selling?" -%}
+{%- set ctaSub = flyer.cta.subline if flyer.cta and flyer.cta.subline else "Call me for a free home valuation." -%}
+{%- set others = [] -%}
+{%- for src in l.galleryImageUrls or [] %}{% if src and src != l.heroImageUrl and others.length < 2 %}{% set _n = others.push(src) %}{% endif %}{% endfor -%}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Just Sold · {{ l.street }}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="jsm">
+  <div class="jsm-sheet">
+    <div class="jsm-trim">
+
+      <div class="jsm-top">
+        <img class="jsm-logo" src="assets/c21-masters-black.svg" alt="CENTURY 21 Masters">
+        <p class="jsm-caption">{{ l.city }}, {{ l.state }}</p>
+      </div>
+
+      <h1 class="jsm-title"><span class="jsm-title__just">Just</span><span class="jsm-title__sold">Sold!</span></h1>
+      <svg class="jsm-swash" viewBox="0 0 400 16" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M2 11 C 90 3, 230 2, 398 7" fill="none" stroke="#beaf87" stroke-width="3" stroke-linecap="round"/>
+        <path d="M60 14 C 150 8, 260 8, 360 11" fill="none" stroke="#beaf87" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      <p class="jsm-ribbon"><b>Congratulations</b> to the sellers!</p>
+
+      <div class="jsm-goldblock"></div>
+      <div class="jsm-hero"><img src="{{ l.heroImageUrl }}" alt=""{% if l.heroPositionX %} style="--hero-x: {{ l.heroPositionX }}%"{% endif %}></div>
+      {%- if others.length %}
+      <div class="jsm-inside">
+        {%- for src in others %}
+        <div><img src="{{ src }}" alt=""></div>
+        {%- endfor %}
+      </div>
+      {%- endif %}
+
+      <div class="jsm-band"></div>
+      <div class="jsm-facts">
+        <div class="jsm-place-block">
+          <img src="assets/icon-pin-gold.svg" alt="">
+          <p class="jsm-address">{{ l.street }}<span>{{ l.city }}, {{ l.state }} {{ l.zip }}</span></p>
+        </div>
+        <ul class="jsm-stats">
+          {%- if l.beds %}<li class="jsm-stat"><i><img src="assets/icon-bed-dark.svg" alt=""></i><b>{{ l.beds }}</b><span>{% if l.beds == "1" %}Bed{% else %}Beds{% endif %}</span></li>{% endif %}
+          {%- if l.baths %}<li class="jsm-stat"><i><img src="assets/icon-bath-dark.svg" alt=""></i><b>{{ l.baths }}</b><span>{% if l.baths == "1" %}Bath{% else %}Baths{% endif %}</span></li>{% endif %}
+          {%- if l.sqft %}<li class="jsm-stat"><i><img src="assets/icon-sqft-dark.svg" alt=""></i><b>{{ l.sqft }}</b><span>Sq Ft</span></li>{% endif %}
+          {%- if l.garageSpaces %}<li class="jsm-stat"><i><img src="assets/icon-garage-dark.svg" alt=""></i><b>{{ l.garageSpaces }}-Car</b><span>Garage</span></li>{% endif %}
+        </ul>
+        {%- if s.soldPrice or side %}
+        <div class="jsm-price">
+          {%- if s.soldPrice %}
+            <p class="jsm-caption jsm-price__caption">{% if s.soldPriceLabel %}{{ s.soldPriceLabel }}{% else %}Sold for{% endif %}</p>
+            <p class="jsm-price__value">{{ s.soldPrice }}</p>
+            {%- endif %}
+            {%- if side %}<p class="jsm-side">{{ side }}</p>{% endif %}
+        </div>
+        {%- endif %}
+      </div>
+      <p class="jsm-cheer"><b>Welcome home</b> to the new owners. {{ ctaHead }} {{ ctaSub }}</p>
+
+      <div class="jsm-foot">
+        <div class="jsm-agent">
+          <div class="jsm-agent__photo">
+            {%- if a.headshotUrl %}<img src="{{ a.headshotUrl }}" alt="{{ a.fullName }}">{% endif -%}
+          </div>
+          <div class="jsm-agent__who">
+            <p class="jsm-agent__caption">Sold by</p>
+            <p class="jsm-agent__name">{{ a.fullName }}</p>
+            <p class="jsm-agent__credential">{% if a.jobTitle %}{{ a.jobTitle }}{% else %}Realtor®{% endif %}{% if a.dre %} | DRE #{{ a.dre }}{% endif %}</p>
+          </div>
+        </div>
+        <ul class="jsm-reach">
+          {%- if a.phone %}<li><i><img src="assets/icon-phone-white.svg" alt=""></i>{{ a.phone }}</li>{% endif %}
+          {%- if a.email %}<li><i><img src="assets/icon-email-white.svg" alt=""></i>{{ a.email }}</li>{% endif %}
+          {%- if a.website %}<li><i><img src="assets/icon-globe-white.svg" alt=""></i>{{ a.website }}</li>{% endif %}
+        </ul>
+      </div>
+
+      <div class="jsm-legal">
+        <img src="assets/equal-housing-black.png" alt="Equal Housing Opportunity">
+        <img src="assets/realtor-black.png" alt="REALTOR®">
+        {# Word for word from brand/legal-text.md (Flyers). #}
+        <p>Each office is Independently Owned &amp; Operated | Broker DRE# 01849354</p>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,548 @@
+/* ==========================================================================
+   Flyer / just-sold-mosaic
+   8.5 x 11 in, 0.125 in bleed. Relentless palette only.
+
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Bold%20Italic.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Typold Condensed";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Condensed%20Black.otf") format("opentype");
+  font-weight: 900;
+}
+
+   The idea: a layered mosaic. On light grey, the title runs on one line,
+   two voices side by side: "Just" in gold italic, "SOLD!" in heavy
+   condensed black, underlined by a gold swash. A dark ribbon cuts in from
+   the left bleed with the congratulations. Below, a photo mosaic in
+   layers: the house large with a gold block offset behind it, and two
+   interiors stacked on the right overlapping its edge in white mounts.
+   A full-bleed dark band carries the facts in gold icon discs and the
+   price; the agent and three ways to reach them sit on the light ground
+   at the foot.
+
+   Units are pt. .jsm-sheet is trim + bleed (630 x 810), .jsm-trim is the
+   finished size (612 x 792) and everything is placed in trim coordinates.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Medium.otf") format("opentype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Typold";
+  src: url("../../../brand/fonts/typold-cufonfonts/The%20Northern%20Block%20Ltd%20-%20Typold%20Bold.otf") format("opentype");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("../../../brand/fonts/Oakes-Font/Oakes%20Grotesk%20Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@page {
+  size: 8.75in 11.25in;
+  margin: 0;
+}
+
+.jsm {
+  /* Relentless palette */
+  --gold: #beaf87;
+  --gold-med: #ded7c3;
+  --gold-lt: #f8f7f2;
+  --white: #ffffff;
+  --grey-lt: #f4f4f6;
+  --grey-med: #c4c4c6;
+  --grey: #252526;
+  --grey-rgb: 37, 37, 38;
+
+  --bleed: 9pt;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.jsm {
+  background: #d9d9d9;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+@media print {
+  body.jsm {
+    background: none;
+  }
+}
+
+/* :where() keeps the reset at single-class weight so element rules win. */
+.jsm :where(p, h1, h2, ul) {
+  margin: 0;
+  padding: 0;
+}
+
+.jsm ul {
+  list-style: none;
+}
+
+.jsm img {
+  display: block;
+}
+
+.jsm-sheet {
+  position: relative;
+  width: 630pt;
+  height: 810pt;
+  overflow: hidden;
+  background: var(--grey-lt);
+  font-family: "Oakes Grotesk", sans-serif;
+}
+
+.jsm-trim {
+  position: absolute;
+  inset: var(--bleed);
+}
+
+/* Shared small parts: legal line, contact lines, captions. */
+.jsm-legal {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 762pt;
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+}
+
+.jsm-legal img {
+  height: 11pt;
+  width: auto;
+}
+
+.jsm-legal p {
+  margin-left: 2pt;
+  font-size: 6pt;
+}
+
+.jsm-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 3pt;
+}
+
+.jsm-contact p {
+  display: flex;
+  align-items: center;
+  gap: 6pt;
+  font-size: 9pt;
+  white-space: nowrap;
+}
+
+.jsm-contact img {
+  width: 11pt;
+  height: 11pt;
+}
+
+.jsm-caption {
+  font-weight: 700;
+  font-size: 7pt;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.jsm-sheet {
+  color: var(--grey);
+}
+
+.jsm-top {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 30pt;
+  height: 25pt;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.jsm-logo {
+  height: 25pt;
+  width: auto;
+}
+
+.jsm-title {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 70pt;
+  display: flex;
+  align-items: baseline;
+  gap: 14pt;
+  white-space: nowrap;
+}
+
+.jsm-title__just {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 72pt;
+  line-height: 1;
+  color: var(--gold);
+}
+
+.jsm-title__sold {
+  font-family: "Typold Condensed", sans-serif;
+  font-weight: 900;
+  font-size: 118pt;
+  line-height: 0.85;
+  text-transform: uppercase;
+}
+
+.jsm-swash {
+  position: absolute;
+  left: 30pt;
+  top: 176pt;
+  width: 400pt;
+  height: 16pt;
+}
+
+.jsm-ribbon {
+  position: absolute;
+  left: calc(-1 * var(--bleed));
+  top: 202pt;
+  width: calc(372pt + var(--bleed));
+  height: 30pt;
+  display: flex;
+  align-items: center;
+  padding-left: calc(30pt + var(--bleed));
+  background: var(--grey);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 14pt) 100%, 0 100%);
+  font-weight: 700;
+  font-size: 9.5pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--white);
+  white-space: nowrap;
+}
+
+.jsm-ribbon b {
+  color: var(--gold);
+  margin-right: 6pt;
+}
+
+/* The mosaic: house x 30-420, y 252-486, gold block offset behind it;
+   interiors x 400-582 overlapping the house's right edge. */
+.jsm-goldblock {
+  position: absolute;
+  left: 44pt;
+  top: 266pt;
+  width: 390pt;
+  height: 234pt;
+  background: var(--gold);
+}
+
+.jsm-hero {
+  position: absolute;
+  left: 30pt;
+  top: 252pt;
+  width: 390pt;
+  height: 234pt;
+}
+
+.jsm-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--hero-x, 50%) center;
+}
+
+.jsm-inside {
+  position: absolute;
+  left: 400pt;
+  right: 30pt;
+  top: 244pt;
+  height: 252pt;
+  display: flex;
+  flex-direction: column;
+  gap: 10pt;
+}
+
+.jsm-inside div {
+  flex: 1 1 0;
+  min-height: 0;
+  padding: 4pt;
+  background: var(--white);
+  box-shadow: 0 0 0 0.75pt var(--grey-med);
+}
+
+.jsm-inside img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Dark band of facts. */
+.jsm-band {
+  position: absolute;
+  left: calc(-1 * var(--bleed));
+  right: calc(-1 * var(--bleed));
+  top: 520pt;
+  height: 118pt;
+  background: var(--grey);
+}
+
+.jsm-facts {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 534pt;
+  display: flex;
+  align-items: center;
+  gap: 16pt;
+  color: var(--gold-lt);
+}
+
+.jsm-place-block {
+  flex: 0 0 150pt;
+  display: flex;
+  gap: 6pt;
+}
+
+.jsm-place-block img {
+  flex-shrink: 0;
+  width: 18pt;
+  height: 18pt;
+}
+
+.jsm-address {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 11pt;
+  line-height: 1.2;
+  color: var(--white);
+}
+
+.jsm-address span {
+  display: block;
+  font-family: "Oakes Grotesk", sans-serif;
+  font-weight: 400;
+  font-size: 8.5pt;
+  color: var(--gold-med);
+}
+
+.jsm-facts .jsm-stats {
+  flex: 1 1 0;
+}
+
+.jsm-stats {
+  display: flex;
+  gap: 0;
+}
+
+.jsm-stat {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.jsm-stat + .jsm-stat {
+  border-left: 0.75pt solid var(--gold);
+}
+
+.jsm-stat i {
+  width: 34pt;
+  height: 34pt;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gold);
+}
+
+.jsm-stat i img {
+  width: 17pt;
+  height: 17pt;
+}
+
+.jsm-stat b {
+  margin-top: 5pt;
+  font-family: "Typold", sans-serif;
+  font-size: 13pt;
+  line-height: 1;
+  color: var(--white);
+}
+
+.jsm-stat span {
+  margin-top: 2pt;
+  font-weight: 700;
+  font-size: 6.5pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-med);
+}
+
+.jsm-price {
+  flex: 0 0 auto;
+  text-align: right;
+}
+
+.jsm-price__caption {
+  color: var(--gold-med);
+}
+
+.jsm-price__value {
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 22pt;
+  line-height: 1.05;
+  color: var(--gold);
+}
+
+.jsm-side {
+  font-size: 7.5pt;
+  color: var(--gold-med);
+}
+
+.jsm-cheer {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 606pt;
+  text-align: center;
+  font-size: 9.5pt;
+  color: var(--gold-lt);
+}
+
+.jsm-cheer b {
+  font-family: "Typold", sans-serif;
+  font-style: italic;
+  font-size: 12pt;
+  color: var(--gold);
+}
+
+/* The footer: agent on the left, contact lines on the right, centred on
+   one line in the space above the legal line. */
+.jsm-foot {
+  position: absolute;
+  left: 30pt;
+  right: 30pt;
+  top: 650pt;
+  height: 104pt;
+  display: flex;
+  align-items: center;
+  gap: 22pt;
+}
+
+.jsm-agent {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 14pt;
+}
+
+.jsm-agent__photo {
+  flex-shrink: 0;
+  width: 64pt;
+  height: 64pt;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--gold-med);
+  box-shadow: 0 0 0 2pt var(--grey-lt), 0 0 0 3.25pt var(--gold);
+}
+
+.jsm-agent__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+}
+
+.jsm-agent__who {
+  min-width: 0;
+}
+
+.jsm-agent__caption {
+  font-weight: 700;
+  font-size: 7pt;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.jsm-agent__name {
+  margin-top: 2pt;
+  font-family: "Typold", sans-serif;
+  font-weight: 700;
+  font-size: 15pt;
+  line-height: 1.1;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.jsm-agent__credential {
+  margin-top: 2pt;
+  font-size: 8pt;
+}
+
+/* Contact lines: one per line, icon then text, left-aligned. */
+.jsm-reach {
+  flex-shrink: 0;
+  padding-left: 22pt;
+  border-left: 1pt solid var(--gold);
+  display: flex;
+  flex-direction: column;
+  gap: 6pt;
+}
+
+.jsm-reach li {
+  display: flex;
+  align-items: center;
+  gap: 8pt;
+  font-size: 9pt;
+  white-space: nowrap;
+}
+
+.jsm-reach i {
+  flex-shrink: 0;
+  width: 20pt;
+  height: 20pt;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--grey);
+}
+
+.jsm-reach i img {
+  width: 10pt;
+  height: 10pt;
+}
+
+.jsm-legal {
+  top: 764pt;
+}
